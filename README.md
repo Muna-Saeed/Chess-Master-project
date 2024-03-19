@@ -102,13 +102,13 @@
 
 ## Architecture
 
-![Chess Master Architecture](architecture_diagram.png)
+![Chess Master Architecture](architecture_diagram.PNG)
 
 ---
 
 ## Data Model
 
-![Chess Master Data Model](data_model.png)
+![Chess Master Data Model](data_model.PNG)
 
 ---
 
