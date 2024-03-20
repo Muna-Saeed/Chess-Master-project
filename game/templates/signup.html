@@ -15,6 +15,7 @@
                     <div class="auth-form__field">
                         <i class="auth-form__icon fas fa-user"></i>
                         <input type="text" name="username" class="auth-form__input" placeholder="Username" required>
+			<p style="color:red;">{{username}}</p>
                     </div>
                     <div class="auth-form__field">
                         <i class="auth-form__icon fas fa-user"></i>
@@ -27,10 +28,12 @@
                     <div class="auth-form__field">
                         <i class="auth-form__icon fas fa-envelope"></i>
                         <input type="email" name="email" class="auth-form__input" placeholder="Email" required>
+			<p style="color:red;">{{email}}</p>
                     </div>
                     <div class="auth-form__field">
                         <i class="auth-form__icon fas fa-lock"></i>
                         <input type="password" name="password" class="auth-form__input" placeholder="Password" required>
+			<p style="color:red;">{{pasw}}</p>
                     </div>
                     <button type="submit" class="auth-form__submit">
                         <span class="button__text">Register Now</span>
