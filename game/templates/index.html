@@ -11,9 +11,11 @@
     <header>
         <h1>Chess Master</h1>
         <nav>
+	    {%if user %} <p>{{user.username}}</p> {%endif%}
             <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="/play">Play</a></li>
+		<li><a href="/create">login</a></li>
             </ul>
         </nav>
     </header>

@@ -3,6 +3,16 @@
 
 ---
 
+## Run Instructions
+
+To run the Chess Master project locally, follow these steps:
+
+1. Make sure you have Python 3 installed on your system.
+
+2. Run the following command to start the Flask application:
+python3 -m game.app
+
+
 ### Team Members
 
 1. **Abdiwoli Abdi**

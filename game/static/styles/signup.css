@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Raleway, sans-serif;
+}
+
+body {
+    background-color: darkgray;
+}
+
+.container-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.auth-screen {
+    background-color: #ffffff;
+    position: relative;
+    height: 600px;
+    width: 360px;
+    box-shadow: 0px 0px 24px #d0d0d0;
+}
+
+.auth-screen__content {
+    z-index: 1;
+    position: relative;
+    height: 100%;
+}
+
+.auth-screen__background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+}
+
+.auth-form {
+    width: 320px;
+    padding: 30px;
+    padding-top: 0px; /* Adjusted padding-top */
+}
+
+.auth-form__field {
+    padding: 10px 0px;
+    position: relative;
+}
+
+.auth-form__icon {
+    position: absolute;
+    top: 30px;
+    color: #7875B5;
+}
+
+.auth-form__input {
+    border: none;
+    border-bottom: 2px solid #D1D1D4;
+    background: none;
+    padding: 10px;
+    padding-left: 24px;
+    font-weight: 700;
+    width: 75%;
+    transition: .2s;
+}
+
+.auth-form__input:active,
+.auth-form__input:focus,
+.auth-form__input:hover {
+    outline: none;
+    border-bottom-color: #6A679E;
+}
+
+.auth-form__submit {
+    background: #fff;
+    font-size: 14px;
+    margin-top: 30px;
+    padding: 16px 20px;
+    border-radius: 26px;
+    border: 1px solid #D4D3E8;
+    text-transform: uppercase;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    color: #4C489D;
+    box-shadow: 0px 2px 2px #5C5696;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.auth-form__submit:active,
+.auth-form__submit:focus,
+.auth-form__submit:hover {
+    border-color: #6A679E;
+    outline: none;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.auth-header h2 {
+    font-size: 24px;
+    color: #3333
+}
+
+.register-link {
+    text-align: center;
+    margin-top: 20px; /* Adjust margin-top as needed */
+}
+
+.register-link p {
+    font-size: 14px;
+    color: #666666;
+    margin: 0; /* Reset margin to remove any default margin */
+}
+
+.register-link a {
+    color: #4C489D;
+    text-decoration: none;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}

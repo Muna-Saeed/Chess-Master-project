@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="static/styles/signup.css"/>
+</head>
+<body>
+    <div class="container-wrapper">
+        <div class="auth-screen">
+            <div class="auth-header">
+                <h2>Create an Account</h2>
+                <p>Please fill in the form to register.</p>
+            </div>
+            <div class="auth-screen__content">
+                <form class="auth-form" method="POST" action="/check_new_user">
+                    <div class="auth-form__field">
+                        <i class="auth-form__icon fas fa-user"></i>
+                        <input type="text" name="username" class="auth-form__input" placeholder="Username" required>
+                    </div>
+                    <div class="auth-form__field">
+                        <i class="auth-form__icon fas fa-user"></i>
+                        <input type="text" name="first_name" class="auth-form__input" placeholder="First Name" required>
+                    </div>
+                    <div class="auth-form__field">
+                        <i class="auth-form__icon fas fa-user"></i>
+                        <input type="text" name="last_name" class="auth-form__input" placeholder="Last Name" required>
+                    </div>
+                    <div class="auth-form__field">
+                        <i class="auth-form__icon fas fa-envelope"></i>
+                        <input type="email" name="email" class="auth-form__input" placeholder="Email" required>
+                    </div>
+                    <div class="auth-form__field">
+                        <i class="auth-form__icon fas fa-lock"></i>
+                        <input type="password" name="password" class="auth-form__input" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="auth-form__submit">
+                        <span class="button__text">Register Now</span>
+                        <i class="auth-button__icon fas fa-chevron-right"></i>
+                    </button>
+                </form>
+		<div class="register-link">
+		    <p style="color:red;"> {{message}} </p>
+		    <p>Already have an account? <a href="/login">Log in</a></p>
+		</div>
+
+            </div>
+        </div>
+     </div>
+   </body>
+</html>

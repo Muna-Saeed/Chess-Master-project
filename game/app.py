@@ -1,8 +1,11 @@
 # Chess Master project using Flask for the backend
 
 from flask import Flask, render_template, request, jsonify
+from game.more_routes.user import routes
+
 
 app = Flask(__name__)
+app.register_blueprint(routes)
 
 # Sample data for demonstration
 players = {
@@ -32,6 +35,10 @@ def manage_games():
         data = request.get_json()
         # Logic to create a new game, add to 'games' list, etc.
         return jsonify({"message": "New game created"})
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
