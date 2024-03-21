@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game History</title>
+    <title>Game History - Chess Master</title>
     <link rel="stylesheet" href="static/styles/styles.css">
 </head>
 <body>
@@ -22,6 +22,16 @@
     </header>
     <main>
         <!-- Display game history here -->
+	 <h2>Match History</h2>
+        <ul>
+            {% for game in history %}
+            <li>
+                <p>Date: {{ game.date }}</p>
+                <p>Opponent: {{ game.opponent }}</p>
+                <p>Result: {{ game.result }}</p>
+            </li>
+            {% endfor %}
+        </ul>
     </main>
     <footer>
         <p>&copy; 2024 Chess Master. All rights reserved.</p>

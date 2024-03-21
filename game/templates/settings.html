@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings</title>
+    <title>Settings - Chess Master</title>
     <link rel="stylesheet" href="static/styles/styles.css">
 </head>
 <body>
@@ -22,6 +22,16 @@
     </header>
     <main>
         <!-- Display user settings options here -->
+	 <p>Current Theme: {{ settings.theme }}</p>
+        <!-- Add options to change theme -->
+        
+        <h2>Notifications</h2>
+        <p>Receive Notifications: {% if settings.notifications %}Yes{% else %}No{% endif %}</p>
+        <!-- Add options to enable/disable notifications -->
+        
+        <h2>Sound</h2>
+        <p>Sound Effects: {% if settings.sound %}Enabled{% else %}Disabled{% endif %}</p>
+        <!-- Add options to enable/disable sound -->
     </main>
     <footer>
         <p>&copy; 2024 Chess Master. All rights reserved.</p>
