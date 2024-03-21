@@ -4,6 +4,22 @@
     <link rel="stylesheet" href="static/styles/signup.css"/>
 </head>
 <body>
+
+    <header>
+        <h1>Chess Master</h1>
+        <nav>
+            {%if user %} <p>{{user.username}}</p> {%endif%}
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/play">Play</a></li>
+                <li><a href="/create">Login</a></li>
+                <li><a href="/user">User Profile</a></li>
+                <li><a href="/history">Game_History</a></li>
+                <li><a href="/settings">Settings</a></li>
+            </ul>
+        </nav>
+    </header>
+
     <div class="container-wrapper">
         <div class="auth-screen">
             <div class="auth-header">
