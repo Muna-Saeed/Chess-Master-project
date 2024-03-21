@@ -23,6 +23,10 @@ def index():
 def play():
     return render_template('play.html')
 
+@app.route('/user')
+def play():
+    return render_template('user_profile.html')
+
 @app.route('/api/players')
 def get_players():
     return jsonify(players)
