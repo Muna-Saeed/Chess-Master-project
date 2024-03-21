@@ -1,12 +1,10 @@
 /* Style for chessboard */
-#chessboard {
-    /* to be added styles for the chessboard */
-}
 
 /* Reset default margin and padding */
 html, body {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 /* Global styles */
@@ -53,4 +51,46 @@ footer {
     bottom: 0;
     width: 100%;
     text-align: center;
+}
+
+/* Style for the entire chessboard */
+#chessboard {
+    display: grid;
+    grid-template-columns: repeat(8, 60px); /* Adjust width of each square */
+    grid-template-rows: repeat(8, 60px); /* Adjust height of each square */
+    border: 2px solid #333; /* Border color for the chessboard */
+}
+
+/* Style for each square on the chessboard */
+.square {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Style for light squares */
+.square:nth-child(even) {
+    background-color: #f0d9b5; /* Light square color */
+}
+
+/* Style for dark squares */
+.square:nth-child(odd) {
+    background-color: #b58863; /* Dark square color */
+}
+
+/* Style for chess pieces */
+.piece {
+    width: 80%; /* Adjust size of the chess pieces */
+    height: 80%; /* Adjust size of the chess pieces */
+    cursor: pointer; /* Show pointer cursor on hover */
+}
+
+/* Style for white pieces */
+.piece.white {
+    fill: #f0f0f0; /* Color for white pieces */
+}
+
+/* Style for black pieces */
+.piece.black {
+    fill: #333; /* Color for black pieces */
 }
