@@ -45,8 +45,7 @@ function createChessPiece(type, color) {
 function initializeChessGame() {
     createChessboard();
     setupPieces();
-    // Add event listeners for handling user interactions (e.g., moving pieces)
-    // Implement game logic (e.g., piece movements, capturing)
+    addSquareClickListeners();
 }
 
 // Function to set up chess pieces on the board
@@ -60,7 +59,135 @@ function setupPieces() {
     }
 
     // Place other pieces (rooks, knights, bishops, queens, kings)
-    // Logic for placing pieces on the initial board position
+    for (let col = 0; col < BOARD_SIZE; col++) {
+        const whitePieceTypes = [PIECE_TYPES.ROOK, PIECE_TYPES.KNIGHT, PIECE_TYPES.BISHOP, PIECE_TYPES.QUEEN, PIECE_TYPES.KING];
+        const blackPieceTypes = [PIECE_TYPES.KING, PIECE_TYPES.QUEEN, PIECE_TYPES.BISHOP, PIECE_TYPES.KNIGHT, PIECE_TYPES.ROOK];
+     // Logic for placing pieces on the initial board position   
+        chessboard.appendChild(createChessPiece(whitePieceTypes[col], PLAYER_COLORS.WHITE));
+        chessboard.appendChild(createChessPiece(blackPieceTypes[col], PLAYER_COLORS.BLACK));
+    }
+}
+
+// Function to add event listeners for square clicks
+function addSquareClickListeners() {
+    const squares = document.querySelectorAll('.square');
+    squares.forEach(square => {
+        square.addEventListener('click', handleSquareClick);
+    });
+}
+
+// Function to handle square click event
+function handleSquareClick(event) {
+    const clickedSquare = event.target;
+
+    // Check if the clicked square contains a piece
+    if (clickedSquare.classList.contains('piece')) {
+        const selectedPiece = clickedSquare;
+        // Implement logic to handle piece selection and movement
+        handlePieceSelection(selectedPiece);
+    } else {
+        // Implement logic for empty square click
+        handleEmptySquareClick(clickedSquare);
+    }
+}
+
+// Function to handle piece selection and movement
+function handlePieceSelection(piece) {
+    // Remove highlighting from previously selected squares
+    const previouslySelectedSquares = document.querySelectorAll('.selected');
+    previouslySelectedSquares.forEach(square => square.classList.remove('selected'));
+
+    // Highlight the clicked piece and its valid move squares
+    piece.classList.add('selected');
+    highlightValidMoves(piece);
+}
+
+// Function to highlight valid move squares for the selected piece
+function highlightValidMoves(piece) {
+    // Get the position of the selected piece
+    const piecePosition = getPosition(piece);
+
+    // Get valid moves for the selected piece based on its type and current position
+    const validMoves = getValidMoves(piece);
+
+    // Highlight valid move squares
+    validMoves.forEach(move => {
+        const [row, col] = move;
+        const targetSquare = document.querySelector(`.square[data-row="${row}"][data-col="${col}"]`);
+        targetSquare.classList.add('valid-move');
+    });
+}
+
+// Function to get the position (row, col) of a piece on the chessboard
+function getPosition(piece) {
+    const square = piece.parentElement;
+    const row = parseInt(square.getAttribute('data-row'));
+    const col = parseInt(square.getAttribute('data-col'));
+    return [row, col];
+}
+
+// Function to get valid moves for a piece based on its type and position
+function getValidMoves(piece) {
+    const validMoves = [];
+
+    // Get the current position of the piece
+    const currentPosition = piece.parentElement;
+    const currentRow = parseInt(currentPosition.dataset.row);
+    const currentCol = parseInt(currentPosition.dataset.col);
+
+    // Implement logic to determine valid moves based on the piece type
+    switch (piece.classList[1]) {
+        case PIECE_TYPES.PAWN:
+            // Logic for pawn moves
+            // Example: For now, let's say pawns can move one square forward
+            const forwardSquare = document.querySelector(`[data-row="${currentRow + 1}"][data-col="${currentCol}"]`);
+            if (forwardSquare) {
+                validMoves.push(forwardSquare);
+            }
+            break;
+        // Add cases for other piece types: rook, knight, bishop, queen, king
+        // Implement logic for their valid moves based on their movement rules
+        default:
+            break;
+    }
+
+    return validMoves;
+}
+
+// Function to handle empty square click
+function handleEmptySquareClick(square) {
+    const selectedPiece = document.querySelector('.piece.selected');
+
+    // Check if there is a selected piece
+    if (selectedPiece) {
+        const targetSquare = square;
+        // Move the selected piece to the empty square if it's a valid move
+        if (targetSquare.classList.contains('valid-move')) {
+            movePiece(selectedPiece, targetSquare);
+        }
+    }
+}
+
+// Function to move the piece to the target square
+function movePiece(piece, targetSquare) {
+    // Remove highlighting from all squares
+    const allSquares = document.querySelectorAll('.square');
+    allSquares.forEach(square => square.classList.remove('valid-move', 'selected'));
+
+    // Move the piece to the target square
+    targetSquare.appendChild(piece);
+}
+
+// Function to handle capturing opponent's piece
+function handleCapturePiece(piece, targetSquare) {
+    // Move capturing piece to the target square and remove captured piece
+    handlePieceMovement(piece, targetSquare);
+    targetSquare.removeChild(targetSquare.firstElementChild);
+}
+
+// Function to check if the move is a capture
+function isCaptureMove(targetSquare) {
+    return targetSquare.childElementCount > 0;
 }
 
 // Call initializeChessGame when the page loads
