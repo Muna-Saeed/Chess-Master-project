@@ -28,6 +28,8 @@ function createChessboard() {
         for (let col = 0; col < BOARD_SIZE; col++) {
             const square = document.createElement('div');
             square.classList.add('square');
+	    square.dataset.row = row;
+            square.dataset.col = col;
             square.style.backgroundColor = (row + col) % 2 === 0 ? LIGHT_SQUARE_COLOR : DARK_SQUARE_COLOR;
             chessboard.appendChild(square);
         }
@@ -104,8 +106,6 @@ function handlePieceSelection(piece) {
 
 // Function to highlight valid move squares for the selected piece
 function highlightValidMoves(piece) {
-    // Get the position of the selected piece
-    const piecePosition = getPosition(piece);
 
     // Get valid moves for the selected piece based on its type and current position
     const validMoves = getValidMoves(piece);
@@ -118,22 +118,14 @@ function highlightValidMoves(piece) {
     });
 }
 
-// Function to get the position (row, col) of a piece on the chessboard
-function getPosition(piece) {
-    const square = piece.parentElement;
-    const row = parseInt(square.getAttribute('data-row'));
-    const col = parseInt(square.getAttribute('data-col'));
-    return [row, col];
-}
-
 // Function to get valid moves for a piece based on its type and position
 function getValidMoves(piece) {
-    const validMoves = [];
 
     // Get the current position of the piece
     const currentPosition = piece.parentElement;
     const currentRow = parseInt(currentPosition.dataset.row);
     const currentCol = parseInt(currentPosition.dataset.col);
+    const validMoves = [];
 
     // Implement logic to determine valid moves based on the piece type
     switch (piece.classList[1]) {
@@ -142,7 +134,7 @@ function getValidMoves(piece) {
             // Example: For now, let's say pawns can move one square forward
             const forwardSquare = document.querySelector(`[data-row="${currentRow + 1}"][data-col="${currentCol}"]`);
             if (forwardSquare) {
-                validMoves.push(forwardSquare);
+                validMoves.push([currentRow + 1, currentCol]);
             }
             break;
         // Add cases for other piece types: rook, knight, bishop, queen, king
@@ -178,6 +170,8 @@ function movePiece(piece, targetSquare) {
     targetSquare.appendChild(piece);
 }
 
+
+
 // Function to handle capturing opponent's piece
 function handleCapturePiece(piece, targetSquare) {
     // Move capturing piece to the target square and remove captured piece
@@ -189,6 +183,8 @@ function handleCapturePiece(piece, targetSquare) {
 function isCaptureMove(targetSquare) {
     return targetSquare.childElementCount > 0;
 }
+
+
 
 // Call initializeChessGame when the page loads
 window.onload = initializeChessGame;
