@@ -137,13 +137,111 @@ function getValidMoves(piece) {
                 validMoves.push([currentRow + 1, currentCol]);
             }
             break;
-        // Add cases for other piece types: rook, knight, bishop, queen, king
-        // Implement logic for their valid moves based on their movement rules
+            case PIECE_TYPES.ROOK:
+            // Rook moves horizontally and vertically
+            for (let row = 0; row < BOARD_SIZE; row++) {
+                if (row !== currentRow) {
+                    validMoves.push([row, currentCol]);
+                }
+            }
+            for (let col = 0; col < BOARD_SIZE; col++) {
+                if (col !== currentCol) {
+                    validMoves.push([currentRow, col]);
+                }
+            }
+            break;
+        case PIECE_TYPES.KNIGHT:
+            // Knight moves in L-shape pattern
+            const knightMoves = [
+                [currentRow + 2, currentCol + 1],
+                [currentRow + 2, currentCol - 1],
+                [currentRow - 2, currentCol + 1],
+                [currentRow - 2, currentCol - 1],
+                [currentRow + 1, currentCol + 2],
+                [currentRow + 1, currentCol - 2],
+                [currentRow - 1, currentCol + 2],
+                [currentRow - 1, currentCol - 2]
+            ];
+            knightMoves.forEach(move => {
+                const [row, col] = move;
+                if (isValidSquare(row, col)) {
+                    validMoves.push([row, col]);
+                }
+            });
+            break;
+        case PIECE_TYPES.BISHOP:
+            // Bishop moves diagonally
+            for (let i = -7; i < 8; i++) {
+                if (i !== 0) {
+                    const row = currentRow + i;
+                    const col1 = currentCol + i;
+                    const col2 = currentCol - i;
+                    if (isValidSquare(row, col1)) {
+                        validMoves.push([row, col1]);
+                    }
+                    if (isValidSquare(row, col2)) {
+                        validMoves.push([row, col2]);
+                    }
+                }
+            }
+            break;
+        case PIECE_TYPES.QUEEN:
+            // Queen combines rook and bishop moves
+            // Rook-like moves
+            for (let row = 0; row < BOARD_SIZE; row++) {
+                if (row !== currentRow) {
+                    validMoves.push([row, currentCol]);
+                }
+            }
+            for (let col = 0; col < BOARD_SIZE; col++) {
+                if (col !== currentCol) {
+                    validMoves.push([currentRow, col]);
+                }
+            }
+            // Bishop-like moves
+            for (let i = -7; i < 8; i++) {
+                if (i !== 0) {
+                    const row = currentRow + i;
+                    const col1 = currentCol + i;
+                    const col2 = currentCol - i;
+                    if (isValidSquare(row, col1)) {
+                        validMoves.push([row, col1]);
+                    }
+                    if (isValidSquare(row, col2)) {
+                        validMoves.push([row, col2]);
+                    }
+                }
+            }
+            break;
+        case PIECE_TYPES.KING:
+            // King moves one square in any direction
+            const kingMoves = [
+                [currentRow + 1, currentCol],
+                [currentRow - 1, currentCol],
+                [currentRow, currentCol + 1],
+                [currentRow, currentCol - 1],
+                [currentRow + 1, currentCol + 1],
+                [currentRow + 1, currentCol - 1],
+                [currentRow - 1, currentCol + 1],
+                [currentRow - 1, currentCol - 1]
+            ];
+            kingMoves.forEach(move => {
+                const [row, col] = move;
+                if (isValidSquare(row, col)) {
+                    validMoves.push([row, col]);
+                }
+            });
+            break;
         default:
             break;
     }
 
     return validMoves;
+}
+
+// Function to check if a square is valid
+function isValidSquare(row, col) {
+    return row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE;
 }
 
 // Function to handle empty square click
