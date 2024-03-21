@@ -27,6 +27,14 @@ def play():
 def user_profile():
     return render_template('user_profile.html')
 
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
+
+@app.route('/history')
+def game_history():
+    return render_template('game_history.html')
+
 @app.route('/api/players')
 def get_players():
     return jsonify(players)
