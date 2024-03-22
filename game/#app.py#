@@ -2,12 +2,12 @@
 
 from flask import Flask, render_template, request, jsonify
 from game.more_routes.user import routes
-from game.more_routes.api import api_route
+from game.more_routes.api import api
 
 
 app = Flask(__name__)
 app.register_blueprint(routes)
-app.register_blueprint(api_route)
+app.register_blueprint(api)
 
 
 # Sample data for demonstration
