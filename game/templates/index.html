@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chess Master</title>
     <link rel="stylesheet" href="static/styles/styles.css">
-    <script src="static/scripts/scripts.js"></script>
 </head>
 <body>
     <header>
@@ -15,17 +14,22 @@
             <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="/play">Play</a></li>
-		<li><a href="/create">login</a></li>
+		<li><a href="/create">Login</a></li>
+                <li><a href="/user">User Profile</a></li>
+                <li><a href="/history">Game_History</a></li>
+                <li><a href="/settings">Settings</a></li>
             </ul>
         </nav>
     </header>
     <main>
         <h2>Welcome to Chess Master</h2>
         <p>Play chess online against friends or the computer!</p>
+	<button onclick="window.location.href='/play'">Start Playing</button>
     </main>
     <footer>
         <p>&copy; 2024 Chess Master. All rights reserved.</p>
     </footer>
-    
+
+    <script src="static/scripts/scripts.js"></script> 
 </body>
 </html>

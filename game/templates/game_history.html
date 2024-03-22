@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Play Chess - Chess Master</title>
+    <title>Game History - Chess Master</title>
     <link rel="stylesheet" href="static/styles/styles.css">
 </head>
 <body>
     <header>
-        <h1>Play Chess</h1>
+        <h1>Game History</h1>
         <nav>
             <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="/play">Play</a></li>
-		<li><a href="/create">Login</a></li>
+                <li><a href="/create">Login</a></li>
                 <li><a href="/user">User Profile</a></li>
                 <li><a href="/history">Game_History</a></li>
                 <li><a href="/settings">Settings</a></li>
@@ -21,10 +21,17 @@
         </nav>
     </header>
     <main>
-        <h2>Game Board</h2>
-        <div id="chessboard">
-            <!-- Chessboard UI will be rendered here -->
-        </div>
+        <!-- Display game history here -->
+	 <h2>Match History</h2>
+        <ul>
+            {% for game in history %}
+            <li>
+                <p>Date: {{ game.date }}</p>
+                <p>Opponent: {{ game.opponent }}</p>
+                <p>Result: {{ game.result }}</p>
+            </li>
+            {% endfor %}
+        </ul>
     </main>
     <footer>
         <p>&copy; 2024 Chess Master. All rights reserved.</p>
