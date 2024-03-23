@@ -40,12 +40,34 @@ function createChessboard() {
 function createChessPiece(type, color) {
     const piece = document.createElement('div');
     piece.classList.add('piece', type, color);
+    piece.textContent = getChessSymbol(type, color);
     return piece;
+}
+
+// Function to get Unicode chess symbol based on piece type and color
+function getChessSymbol(type, color) {
+    switch (type) {
+        case PIECE_TYPES.PAWN:
+            return color === PLAYER_COLORS.WHITE ? '♙' : '♟';
+        case PIECE_TYPES.ROOK:
+            return color === PLAYER_COLORS.WHITE ? '♖' : '♜';
+        case PIECE_TYPES.KNIGHT:
+            return color === PLAYER_COLORS.WHITE ? '♘' : '♞';
+        case PIECE_TYPES.BISHOP:
+            return color === PLAYER_COLORS.WHITE ? '♗' : '♝';
+        case PIECE_TYPES.QUEEN:
+            return color === PLAYER_COLORS.WHITE ? '♕' : '♛';
+        case PIECE_TYPES.KING:
+            return color === PLAYER_COLORS.WHITE ? '♔' : '♚';
+        default:
+            return '';
+    }
 }
 
 // Function to initialize the chess game
 function initializeChessGame() {
     createChessboard();
+    getChessSymbol();
     setupPieces();
     addSquareClickListeners();
 }
