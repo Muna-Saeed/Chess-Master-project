@@ -9,7 +9,6 @@ app = Flask(__name__)
 app.register_blueprint(routes)
 app.register_blueprint(api_route)
 
-
 # Sample data for demonstration
 players = {
     "player1": {"name": "Alice", "rating": 1200},
@@ -24,7 +23,7 @@ def index():
 
 @app.route('/play')
 def play():
-    return render_template('chess_board.html')
+    return render_template('login.html')
 
 @app.route('/user/<username>')
 def user_profile(username):

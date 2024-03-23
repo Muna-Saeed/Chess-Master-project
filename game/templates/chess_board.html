@@ -4,11 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chess Game</title>
-    <link href="static/styles/chessboard.css" rel="stylesheet"></link>
+    <link href="/static/styles/chessboard.css" rel="stylesheet"></link>
 </head>
 <body>
-  <div class="chessboard" id="chessboard"></div>
-  <script src="static/scripts/chess.js"></script>
-  <script src="static/scripts/move.js"></script>
+  <audio id="valid-sound" src="{{ url_for('static', filename='sounds/valid_sound.wav') }}"></audio>
+  <audio id="invalid-sound" src="{{ url_for('static', filename='sounds/invalid_sound.wav') }}"></audio>
+  <h1>{{user.name}}<h1>
+      <div class="chessboard" id="chessboard"></div>
+      <script>
+        userColor = '{{ user.color }}';
+	function playValidSound() {
+            var audio = document.getElementById('valid-sound');
+            audio.play();
+        }
+	function playInValidSound() {
+	    var audio = document.getElementById('invalid-sound');
+            audio.play();
+	}
+      </script>
+      <script src="/static/scripts/move.js"></script>
+      <script src="/static/scripts/chess.js"></script>
 </body>
 </html>

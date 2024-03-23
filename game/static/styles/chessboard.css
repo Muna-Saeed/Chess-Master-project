@@ -12,7 +12,7 @@ body {
 }
 
 .piece.black {
-    color: #000;
+    color: black;
 }
 
 .chessboard {
@@ -47,4 +47,8 @@ body {
 
 .pawn {
     color: #000;
+}
+.selected {
+    background:red;
+    border-radius:50%;
 }

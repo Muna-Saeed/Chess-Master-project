@@ -12,9 +12,8 @@
         <nav>
 	    {%if user %} <p>{{user.username}}</p> {%endif%}
             <ul>
-                <li><a href="/">Home</a></li>
-                {%if user %}<li><a href="/play/{{user.id}}">Play</a></li>
-		{%else%} <li><a href="/play">Play</a></li> {%endif%}
+              <li><a href="/">Home</a></li>
+	        {%if user %} @app.route('/play/<string:id>', methods=['GET']) {%else%} {%endif%}
 		<li><a href="/create">Login</a></li>
                 <li><a href="/user">User Profile</a></li>
                 <li><a href="/history">Game_History</a></li>
@@ -25,8 +24,7 @@
     <main>
         <h2>Welcome to Chess Master</h2>
         <p>Play chess online against friends or the computer!</p>
-	{% if user %}<button onclick="window.location.href='/play/{{user.id}}'">Start Playing</button>
-	{% else %}<button onclick="window.location.href='/play'">Start Playing</button>{%endif%}
+	<button onclick="window.location.href='/play/user=user'">Start Playing</button>
     </main>
     <footer>
         <p>&copy; 2024 Chess Master. All rights reserved.</p>

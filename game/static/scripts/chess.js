@@ -30,11 +30,21 @@ function createChessboard() {
             // Place pieces
             if (row === 1 || row === 6) {
                 const pieceColor = row === 1 ? 'black' : 'white';
-                square.innerHTML = `<div class="piece pawn ${pieceColor}">${row === 1 ? PIECE_TYPES.PAWN : PIECE_TYPES.PAWN}</div>`;
+                square.innerHTML = `
+                    <div class="piece ${pieceColor}">
+                        <div class="piece-inner">
+                            ${PIECE_TYPES.PAWN}
+                        </div>
+                    </div>`;
             } else if (row === 0 || row === 7) {
                 const pieceColor = row === 0 ? 'black' : 'white';
                 const piecesOrder = [PIECE_TYPES.ROOK, PIECE_TYPES.KNIGHT, PIECE_TYPES.BISHOP, PIECE_TYPES.QUEEN, PIECE_TYPES.KING, PIECE_TYPES.BISHOP, PIECE_TYPES.KNIGHT, PIECE_TYPES.ROOK];
-                square.innerHTML = `<div class="piece ${pieceColor}">${piecesOrder[col]}</div>`;
+                square.innerHTML = `
+                    <div class="piece ${pieceColor}">
+                        <div class="piece-inner">
+                            ${piecesOrder[col]}
+                        </div>
+                    </div>`;
             } else {
                 square.innerHTML = ''; // Empty square
             }
@@ -44,22 +54,6 @@ function createChessboard() {
     }
 }
 
-// Function to handle click on a square
-function handleSquareClick(square) {
-    // If a square is already selected, move the piece to the clicked square
-    if (selectedSquare) {
-        // Implement move logic here
-        // Example: Move the piece from selectedSquare to square
-
-        // Clear the selection
-        selectedSquare.classList.remove('selected');
-        selectedSquare = null;
-    } else {
-        // Select the clicked square
-        square.classList.add('selected');
-        selectedSquare = square;
-    }
-}
-
 // Call createChessboard when the page loads
 window.onload = createChessboard;
+

@@ -53,6 +53,15 @@ def auth():
     return render_template('login.html', message="incorrect password or username!")
 
 
+@routes.route('/play/<id>')
+def play(id):
+    user = storage.get(User, id)
+    if user:
+        user.color = "black"
+        return render_template('chess_board.html', user=user)
+    return render_template('login.html')
+
+
 def is_valid_email(email):
     regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(regex, email) is not None
@@ -64,3 +73,5 @@ def is_valid_username(username):
 def is_valid_password(password):
     regex = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$'
     return re.match(regex, password) is not None
+
+
