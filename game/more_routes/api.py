@@ -15,28 +15,49 @@ api_route = Blueprint('other_routes1', __name__)
 def is_valid_move():
     data = request.json
     board = data.get("board")
+    color_board = data.get('boardColor')
     start = data.get("start")
+    enemy = data.get("enemy")
     end = data.get("end")
     piece_type = data.get("pieceType")
-    if piece_type == '♙'  and is_infont(board, start, end) and count_sq(start, end) < 2 and is_forward(start, end):
-        if pawn_start.get((start[0], start[1])) == 0:
-            print("yes")
-            pawn_start[(start[0], start[1])] = 1
-            return jsonify({"valid_move": True})
-        elif count_sq(start, end) == 0:
-            return jsonify({"valid_move": True})
-    elif piece_type == '♖' and (is_infont(board, start, end) or sides(board, start, end)):
-        return jsonify({"valid_move": True})
-    elif piece_type == '♘' and knight_mv(start, end) and is_end(board, end):
-        return jsonify({"valid_move": True})
-    elif piece_type == '♗' and is_diagonal(start, end) and is_end(board, end):
-        return jsonify({"valid_move": True})
-    elif piece_type == '♕' and is_end(board, end) and count_sq(start, end) == 0:
-        return jsonify({"valid_move": True})
-    elif piece_type == '♔' and '♕' and is_end(board, end):
-        return jsonify({"valid_move": True})
 
-    return jsonify({"valid_move": False})
+    if piece_type == '♙' and is_infont(board, start, end) and count_sq(start, end) < 2 and is_forward(start, end):
+        if pawn_start.get((start[0], start[1])) == 0:
+            pawn_start[(start[0], start[1])] = 1
+            return jsonify({"valid_move": True, "killed": False})
+        elif count_sq(start, end) == 0:
+            return jsonify({"valid_move": True, "killed": False})
+    elif piece_type == '♙' and enemy and is_diagonal(start, end) and not is_end(board, end):
+            return jsonify({"valid_move": True, "killed": True})
+    elif piece_type == '♖' and (is_forward(start, end) or sides(board, start, end)) and not is_diagonal(start, end):
+        print("in")
+        if is_end(board, end):
+            return jsonify({"valid_move": True, "killed": False})
+        elif enemy:
+            return jsonify({"valid_move": True, "killed": True})
+        return jsonify({"valid_move": True})
+    elif piece_type == '♘' and knight_mv(start, end):
+        if is_end(board, end):
+            return jsonify({"valid_move": True, "killed": False})
+        elif enemy:
+            return jsonify({"valid_move": True, "killed": True})
+    elif piece_type == '♗' and is_diagonal(start, end):
+        if is_end(board, end):
+            return jsonify({"valid_move": True, "killed": False})
+        elif enemy:
+            return jsonify({"valid_move": True, "killed": True})
+    elif piece_type == '♔' and count_sq(start, end) == 0:
+        if is_end(board, end):
+            return jsonify({"valid_move": True, "killed": False})
+        elif enemy:
+            return jsonify({"valid_move": True, "killed": True})
+    elif piece_type == '♕':
+        if is_end(board, end):
+            return jsonify({"valid_move": True, "killed": False})
+        elif enemy:
+            return jsonify({"valid_move": True, "killed": True})
+
+    return jsonify({"valid_move": False, "killed": False})
 
 
 pawn_start = {
@@ -84,11 +105,10 @@ def select_white_piece():
 def is_infont(board, start, end):
     x, y = start
     x = x+1
-    if board[x*8+y] and board[x*8+y] is not None:
+    loc = x*8+y
+    if loc < 64 and board[x*8+y] is not None:
         return False
     x, y = end
-    if board[x*8+y] is not None:
-        return False
     return True
 
 def sides(board, start, end):
@@ -104,8 +124,6 @@ def sides(board, start, end):
         x, y = sq
         if board[x * 8 + y]:
             return False
-    if board[end[0] * 8 + end[1]]:
-        return False
     return True
 
 
@@ -114,7 +132,8 @@ def count_sq(start, end):
     x0, y0 = start
     x1, y1 = end
     if x0 != x1 and y0 != y1:
-        return None
+        """note same line"""
+        return 3
     if x0 == x1:
         return abs(y1 - y0) - 1
     else:

@@ -5,6 +5,9 @@ function handleSquareClick(square) {
         console.log("Selected square exists");
 
         const piece = selectedSquare.querySelector('.piece');
+	const endPiece = square.querySelector('.piece');
+	const enemy = getPieceColor(piece) != getPieceColor(endPiece);
+	console.log(enemy);
 
         const startPosition = getPosition(selectedSquare);
         const endPosition = getPosition(square);
@@ -13,6 +16,7 @@ function handleSquareClick(square) {
         console.log(pieceType);
         // Get the current state of the board
         const board = getCurrentBoardState();
+	const ColorBoard = boardOfColors();
 
         // Send an AJAX request to check if the move is valid
         const xhr = new XMLHttpRequest();
@@ -25,12 +29,14 @@ function handleSquareClick(square) {
                 console.log(isValidMove);
 
                 if (isValidMove.valid_move) {
+		    if (isValidMove.killed){
+			square.removeChild(endPiece);
+		    }
 		    playValidSound();
                     selectedSquare.removeChild(piece);
 
                     selectedSquare.classList.remove('selected');
                     selectedSquare = null;
-
                     square.appendChild(piece);
 		    generateRandomMove(board);
                 } else {
@@ -41,11 +47,9 @@ function handleSquareClick(square) {
                 }
             }
         };
-        xhr.send(JSON.stringify({ board: board, start: startPosition, end: endPosition, pieceType: pieceType}));
+        xhr.send(JSON.stringify({ board: board, boardColor:ColorBoard, enemy:enemy, start: startPosition, end: endPosition, pieceType: pieceType}));
     } else {
 	const piece = square.querySelector('.piece');
-	console.log(piece);
-	console.log(getPieceColor(piece))
 	if (getPieceColor(piece) == userColor){
 	    square.classList.add('selected');
 	    selectedSquare = square;
@@ -60,7 +64,6 @@ function handleSquareClick(square) {
 function getPosition(square) {
     // Get the index of the square within its parent container
     const index = Array.from(square.parentNode.children).indexOf(square);
-
     const row = Math.floor(index / 8);
     const col = index % 8;
 
@@ -109,8 +112,8 @@ function getPieceColor(piece) {
 }
 
 
-function generateRandomMove() {
-    const chessboard = document.getElementById('chessboard');
+function boardOfColors(){
+     const chessboard = document.getElementById('chessboard');
     const squares = chessboard.querySelectorAll('.square');
     const pieceColors = [];
 
@@ -118,12 +121,17 @@ function generateRandomMove() {
         const piece = square.querySelector('.piece');
         if (piece) {
             const color = getPieceColor(piece);
-	    console.log(color);
+            console.log(color);
             pieceColors.push(color);
         } else {
             pieceColors.push(null);
         }
     });
+    return pieceColors;
+}
+
+function generateRandomMove() {
+    const pieceColors = boardOfColors();
 
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "/api/generate_random_move", true);
