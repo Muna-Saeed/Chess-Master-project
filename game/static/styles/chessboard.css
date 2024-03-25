@@ -9,6 +9,7 @@ body {
 
 .piece.white {
     color: #fff;
+    background_color:green;
 }
 
 .piece.black {

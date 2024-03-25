@@ -18,9 +18,13 @@ def is_valid_move():
     start = data.get("start")
     end = data.get("end")
     piece_type = data.get("pieceType")
-    if piece_type == '♙' and pawn_start.get((start[0], start[1])) == 0 and is_infont(board, start, end) and count_sq(start, end) < 2:
-        pawn_start[(start[0], start[1])] = 1
-        return jsonify({"valid_move": True})
+    if piece_type == '♙'  and is_infont(board, start, end) and count_sq(start, end) < 2 and is_forward(start, end):
+        if pawn_start.get((start[0], start[1])) == 0:
+            print("yes")
+            pawn_start[(start[0], start[1])] = 1
+            return jsonify({"valid_move": True})
+        elif count_sq(start, end) == 0:
+            return jsonify({"valid_move": True})
     elif piece_type == '♖' and (is_infont(board, start, end) or sides(board, start, end)):
         return jsonify({"valid_move": True})
     elif piece_type == '♘' and knight_mv(start, end) and is_end(board, end):
@@ -31,6 +35,7 @@ def is_valid_move():
         return jsonify({"valid_move": True})
     elif piece_type == '♔' and '♕' and is_end(board, end):
         return jsonify({"valid_move": True})
+
     return jsonify({"valid_move": False})
 
 
@@ -52,24 +57,6 @@ pawn_start = {
     (6, 6): 0,
     (6, 7): 0
 }
-
-
-def get_piece_moves(board, row, col):
-    moves = []
-    if board[row] is not None:
-        
-        piece = board[row][col]
-        piece_color = piece[0]
-        print(piece_color)
-        piece_type = piece
-
-        if piece_color == 'W':
-            if row - 1 >= 0 and board[row - 1][col] == '':
-                moves.append((row, col, row - 1, col))
-        else:
-            if row + 1 < len(board) and board[row + 1] is not None and board[row + 1][col] == '':
-                moves.append((row, col, row + 1, col))
-    return moves
 
 
 
@@ -94,10 +81,10 @@ def select_white_piece():
 
 
 
-def is_infont(board, start, end):    
+def is_infont(board, start, end):
     x, y = start
     x = x+1
-    if board[x*8+y] is not None:
+    if board[x*8+y] and board[x*8+y] is not None:
         return False
     x, y = end
     if board[x*8+y] is not None:
@@ -105,6 +92,7 @@ def is_infont(board, start, end):
     return True
 
 def sides(board, start, end):
+    """ check if the move is to forward, left or right and back"""
     x0, y0 = start
     x1, y1 = end
     if x0 != x1:
@@ -122,6 +110,7 @@ def sides(board, start, end):
 
 
 def count_sq(start, end):
+    """ count how many squares between the clicked and destination"""
     x0, y0 = start
     x1, y1 = end
     if x0 != x1 and y0 != y1:
@@ -142,6 +131,7 @@ def knight_mv(start, end):
         return False
 
 def is_end(board, end):
+    """ check the end poition before moving to"""
     if board[end[0] * 8 + end[1]]:
         return False
     return True
@@ -154,11 +144,16 @@ def is_diagonal(start, end):
     if dx == dy:
         squares_between = dx - 1
         if squares_between == 0:
-            print("true")
+            print("No sqauare between them")
             return True
         else:
             print("more steps")
             return False
     else:
-        print("NOT dig")
         return False
+
+def is_forward(start, end):
+    start_row, end_row = start[0], end[0]
+    if start_row == end_row:
+        return False
+    return end_row > start_row
