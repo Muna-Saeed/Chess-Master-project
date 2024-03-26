@@ -5,8 +5,8 @@ def longest_backward_move(board, row, col):
     last_black_right = None
     longest = None
 
-    # Check backward direction for black pieces
-    for i in range(row - 1, -1, -1):  # Check backward rows
+
+    for i in range(row - 1, -1, -1):
         if board[i * 8 + col] == 'white':
             if i < 7 and board[(i + 1) * 8 + col] is None:
                 longest = (i + 1, col)
@@ -14,9 +14,7 @@ def longest_backward_move(board, row, col):
         if board[i * 8 + col] == 'black':
             last_black_backward = (i, col)
             break
-
-    # Check left direction for black pieces
-    for j in range(col - 1, -1, -1):  # Check left columns
+    for j in range(col - 1, -1, -1):
         if board[row * 8 + j] == 'white':
             if j < 7 and board[row * 8 + j + 1] is None and longest is None:
                 longest = (row, j + 1)
@@ -24,9 +22,7 @@ def longest_backward_move(board, row, col):
         if board[row * 8 + j] == "black":
             last_black_left = (row, j)
             return last_black_left
-
-    # Check right direction for black pieces
-    for k in range(col + 1, 8):  # Check right columns
+    for k in range(col + 1, 8):
         if board[row * 8 + k] == 'white':
             if k > 0 and board[row * 8 + k - 1] is None and longest is None:
                 longest = (row, k - 1)
@@ -34,9 +30,7 @@ def longest_backward_move(board, row, col):
         if board[row * 8 + k] == 'black':
             last_black_right = (row, k)
             break
-            
-    # Check forward direction for black pieces
-    for i in range(row + 1, 8):  # Check forward rows
+    for i in range(row + 1, 8):
         if board[i * 8 + col] == 'white':
             if i > 0 and board[(i - 1) * 8 + col] is None:
                 longest = (i - 1, col)
@@ -141,3 +135,31 @@ def is_forward(start, end):
     if start_row == end_row:
         return False
     return end_row > start_row
+
+
+def is_all_none(board, start, end):
+    start_x, start_y = start
+    end_x, end_y = end
+
+    if start_x == end_x:
+        if start_y < end_y:
+            for i in range(start_y + 1, end_y):
+                if board[start_x * 8 + i] is not None:
+                    return False
+        else:
+            for i in range(end_y + 1, start_y):
+                if board[start_x * 8 + i] is not None:
+                    return False
+    elif start_y == end_y:
+        if start_x < end_x:
+            for i in range(start_x + 1, end_x):
+                if board[i * 8 + start_y] is not None:
+                    return False
+        else:
+            for i in range(end_x + 1, start_x):
+                if board[i * 8 + start_y] is not None:
+                    return False
+    else:
+        return False
+
+    return True

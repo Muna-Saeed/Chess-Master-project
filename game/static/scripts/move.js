@@ -30,6 +30,10 @@ function handleSquareClick(square) {
 
                 if (isValidMove.valid_move) {
 		    if (isValidMove.killed){
+			const pieceType = endPiece.textContent.trim();
+			if (pieceType == '♔') {
+			    alert("game finish")
+			}
 			square.removeChild(endPiece);
 		    }
 		    playValidSound();
@@ -138,6 +142,7 @@ function generateRandomMove() {
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const response = JSON.parse(xhr.responseText);
+	    console.log(response);
             const start_position = response.start_position;
             const end_position = response.end_position;
 	    const board = getChessboardSquares();
