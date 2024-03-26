@@ -34,7 +34,6 @@ function handleSquareClick(square) {
 		    }
 		    playValidSound();
                     selectedSquare.removeChild(piece);
-
                     selectedSquare.classList.remove('selected');
                     selectedSquare = null;
                     square.appendChild(piece);
@@ -132,7 +131,7 @@ function boardOfColors(){
 
 function generateRandomMove() {
     const pieceColors = boardOfColors();
-
+    const pieceBoard = getCurrentBoardState();
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "/api/generate_random_move", true);
     xhr.setRequestHeader("Content-Type", "application/json");
@@ -144,9 +143,12 @@ function generateRandomMove() {
 	    const board = getChessboardSquares();
 	    start_square = board[start_position.row * 8 + start_position.col];
 	    end_square = board[end_position.row * 8 + end_position.col];
-	    console.log(start_square);
-	    console.log(end_square);
-	    
+	    console.log(start_position);
+	    console.log(end_position);
+	    if (response.killed) {
+		const pieceToRemove = end_square.querySelector('.piece');
+		end_square.removeChild(pieceToRemove);
+	    }
 	    const pieceToMove = start_square.querySelector('.piece');
 	    start_square.removeChild(pieceToMove);
 	    console.log(pieceToMove);
@@ -156,5 +158,5 @@ function generateRandomMove() {
 
         }
     };
-    xhr.send(JSON.stringify({ board: pieceColors }));
+    xhr.send(JSON.stringify({ board: pieceColors, pieceBoard: pieceBoard}));
 }

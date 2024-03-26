@@ -5,7 +5,7 @@ from models import storage
 import re
 import requests
 import random
-
+from models.helper import *
 
 api_route = Blueprint('other_routes1', __name__)
 
@@ -51,11 +51,12 @@ def is_valid_move():
             return jsonify({"valid_move": True, "killed": False})
         elif enemy:
             return jsonify({"valid_move": True, "killed": True})
-    elif piece_type == '♕':
+    elif piece_type == '♕' and ((sides(board, start, end) or is_infont(board, start, end)) or not is_diagonal(start, end)):
         if is_end(board, end):
             return jsonify({"valid_move": True, "killed": False})
         elif enemy:
             return jsonify({"valid_move": True, "killed": True})
+
 
     return jsonify({"valid_move": False, "killed": False})
 
@@ -86,93 +87,52 @@ def select_white_piece():
     board = request.json['board']
     start_position = None
     end_position = None
+    pieceBoard = request.json['pieceBoard']
     num_columns = 8
     sq = []
-    for idx, color in enumerate(board):
+    for (idx, color), piece in zip(enumerate(board), pieceBoard):
         row_idx = idx // num_columns
         col_idx = idx % num_columns
+        loc = (row_idx, col_idx)
+        start = {'row': row_idx, 'col': col_idx}
         if color == 'white':
-            if row_idx > 0 and not board[idx - num_columns]:
-                start = {'row': row_idx, 'col': col_idx}
-                end = {'row': row_idx - 1, 'col': col_idx}
-                sq.append((start, end))
+            if piece == "♙":
+                end = bacward_diagonal(board, row_idx - 1, col_idx, loc)
+                target = end[0] * 8 + end[1] if end else False
+                if end and board[target] == "black":
+                    start = {'row': row_idx, 'col': col_idx}
+                    end = {'row': end[0], 'col': end[1]}
+                    return jsonify({'start_position': start, 'end_position': end, "killed": True})
+            elif piece == "♖":
+                ends = longest_backward_move(board, row_idx, col_idx)
+                if ends and board[ends[0] * 8 + ends[1]] != "white":
+                    end = {'row': ends[0], 'col': ends[1]}
+                    if is_end(board, ends):
+                        print("sure is empty")
+                        return jsonify({'start_position': start, 'end_position': end, "killed": False})
+                    return jsonify({'start_position': start, 'end_position': end, "killed": True})
+            if is_end(board, (row_idx-1, col_idx)):
+                    start = {'row': row_idx, 'col': col_idx}
+                    end = {'row': row_idx - 1, 'col': col_idx}
+                    if is_end(board, (row_idx - 1,col_idx)): sq.append((start, end))
+
     if sq:
         start_position, end_position = random.choice(sq)
+        print(start_position, end_position)
     return jsonify({'start_position': start_position, 'end_position': end_position})
 
 
-
-def is_infont(board, start, end):
-    x, y = start
-    x = x+1
-    loc = x*8+y
-    if loc < 64 and board[x*8+y] is not None:
-        return False
-    x, y = end
-    return True
-
-def sides(board, start, end):
-    """ check if the move is to forward, left or right and back"""
-    x0, y0 = start
-    x1, y1 = end
-    if x0 != x1:
-        return False
-    direction = 1 if y1 > y0 else -1
-    squares = [(x0, y) for y in range(y0 + direction, y1, direction)]
-
-    for sq in squares:
-        x, y = sq
-        if board[x * 8 + y]:
-            return False
-    return True
+    
+def bacward_diagonal(board, row, col, end):
+    ran = col + 2
+    if col > 0:
+        col = col - 1
+    for i in range(col, ran):
+        start = row, i
+        idx = row * 8 + i
+        if idx < 64 and board[idx] and is_diagonal(start, end):
+            return start
+    return False
 
 
-def count_sq(start, end):
-    """ count how many squares between the clicked and destination"""
-    x0, y0 = start
-    x1, y1 = end
-    if x0 != x1 and y0 != y1:
-        """note same line"""
-        return 3
-    if x0 == x1:
-        return abs(y1 - y0) - 1
-    else:
-        return abs(x1 - x0) - 1
 
-def knight_mv(start, end):
-    x0, y0 = start
-    x1, y1 = end
-    dx = abs(x1 - x0)
-    dy = abs(y1 - y0)
-    if (dx == 2 and dy == 1) or (dx == 1 and dy == 2):
-        return True
-    else:
-        return False
-
-def is_end(board, end):
-    """ check the end poition before moving to"""
-    if board[end[0] * 8 + end[1]]:
-        return False
-    return True
-
-def is_diagonal(start, end):
-    x0, y0 = start
-    x1, y1 = end
-    dx = abs(x1 - x0)
-    dy = abs(y1 - y0)
-    if dx == dy:
-        squares_between = dx - 1
-        if squares_between == 0:
-            print("No sqauare between them")
-            return True
-        else:
-            print("more steps")
-            return False
-    else:
-        return False
-
-def is_forward(start, end):
-    start_row, end_row = start[0], end[0]
-    if start_row == end_row:
-        return False
-    return end_row > start_row

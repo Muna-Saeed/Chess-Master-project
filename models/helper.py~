@@ -1,0 +1,53 @@
+def longest_backward_move(board, row, col):
+
+    last_black_backward = None
+    last_black_left = None
+    last_black_right = None
+    longest = None
+
+    # Check backward direction for black pieces
+    for i in range(row - 1, -1, -1):  # Check backward rows
+        if board[i * 8 + col] == 'white':
+            if i < 7 and board[(i + 1) * 8 + col] is None:
+                longest = (i + 1, col)
+            break
+        if board[i * 8 + col] == 'black':
+            last_black_backward = (i, col)
+            break
+
+    # Check left direction for black pieces
+    for j in range(col - 1, -1, -1):  # Check left columns
+        if board[row * 8 + j] == 'white':
+            if j < 7 and board[row * 8 + j + 1] is None and longest is None:
+                longest = (row, j + 1)
+            break
+        if board[row * 8 + j] == "black":
+            last_black_left = (row, j)
+            return last_black_left
+
+    # Check right direction for black pieces
+    for k in range(col + 1, 8):  # Check right columns
+        if board[row * 8 + k] == 'white':
+            if k > 0 and board[row * 8 + k - 1] is None and longest is None:
+                longest = (row, k - 1)
+            break
+        if board[row * 8 + k] == 'black':
+            last_black_right = (row, k)
+            break
+            
+    # Check forward direction for black pieces
+    for i in range(row + 1, 8):  # Check forward rows
+        if board[i * 8 + col] == 'white':
+            if i > 0 and board[(i - 1) * 8 + col] is None:
+                longest = (i - 1, col)
+            break
+        if board[i * 8 + col] == 'black':
+            return (i, col)
+
+    if last_black_backward:
+        return last_black_backward
+    if last_black_left:
+        return last_black_left
+    if last_black_right:
+        return last_black_right
+    return longest

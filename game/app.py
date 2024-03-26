@@ -22,7 +22,7 @@ def index():
 
 @app.route('/play')
 def play():
-    return render_template('play.html')
+    return render_template('login.html')
 
 @app.route('/user')
 def user_profile():
