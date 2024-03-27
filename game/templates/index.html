@@ -16,7 +16,7 @@
                 {%if user %}<li><a href="/play/{{user.id}}">Play</a></li>
 		{%else%} <li><a href="/play">Play</a></li> {%endif%}
 		<li><a href="/create">Login</a></li>
-                <li><a href="/user">User Profile</a></li>
+                <li>{% if user %}<a href="/user/{{user.id}}"> {%else%}<a href="/user"> {%endif%}User Profile</a></li>
                 <li><a href="/history">Game_History</a></li>
                 <li><a href="/settings">Settings</a></li>
             </ul>

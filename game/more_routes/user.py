@@ -33,11 +33,10 @@ def check_new_user():
         return render_template('signup.html', username="invalid username!")
     if not is_valid_email(email):
         return render_template('signup.html', email="invalid email!")
-    if not is_valid_password(pasw):
-        return render_template('signup.html', pasw="invalid password!")
+
     
     user = User()
-    user.first_name, user_last = first_name, last_name
+    user.first_name, user.last_name = first_name, last_name
     user.username, user.email, user.pasw = username, email, pasw
     storage.new(user)
     storage.save()
@@ -61,6 +60,15 @@ def play(id):
         return render_template('chess_board.html', user=user)
     return render_template('login.html')
 
+@routes.route('/user', defaults={'user_id': None})
+@routes.route('/user/<user_id>')
+def profile(user_id):
+    if user_id:
+        user = storage.get(User, user_id)
+        return render_template('user_profile.html', user=user)
+    return render_template('login.html')
+
+
 
 def is_valid_email(email):
     regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
@@ -73,5 +81,6 @@ def is_valid_username(username):
 def is_valid_password(password):
     regex = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$'
     return re.match(regex, password) is not None
+
 
 
