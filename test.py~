@@ -1,0 +1,54 @@
+def get_one_move(board, loc):
+    p_row = loc[0] + 1
+    p_column = loc[1]
+    next_row = loc[0] - 1
+    next_column = loc[1]
+    left_x, left_y = loc[0], loc[1] - 1
+    right_x, right_y = loc[0], loc[1] + 1
+
+    idx_left = left_x * 8 + left_y
+    idx_right = right_x * 8 + right_y
+    
+    idx_f = next_row * 8 + next_column
+    idx_b = p_row * 8 + p_column
+
+
+    if idx_f >= 0 and idx_f < 64 and board[idx_f] == "black":
+        return (next_row, next_column)
+    elif idx_left < 64 and board[idx_left] == "black":
+        return (loc[0], loc[1] - 1)
+    elif idx_right < 64 and board[idx_right] == "black":
+        return (loc[0], loc[1] + 1)
+    elif idx_f - 1 >= 0 and idx_f - 1 < 64 and board[idx_f - 1] == "black":
+        return (next_row, next_column - 1)
+    elif idx_f + 1 >= 0 and idx_f + 1 < 64 and board[idx_f + 1] == "black":
+        return (next_row, next_column + 1)
+    elif idx_b >= 0 and idx_b < 64 and board[idx_b] == "black":
+        return (p_row, p_column)
+    elif idx_b - 1 >= 0 and idx_b - 1 < 64 and board[idx_b - 1] == "black":
+        return (p_row , p_column - 1)
+    elif idx_b + 1 >= 0 and idx_b + 1 < 64 and board[idx_b + 1] == "black":
+        return (p_row , p_column + 1)
+    elif idx_f < 64 and board[idx_f] is None:
+        return (next_row, next_column)
+    elif idx_b < 64 and board[idx_b] is None:
+        return (p_row, p_column)
+    elif idx_left < 64 and board[idx_left] is None:
+        return (loc[0], loc[1] - 1)
+    elif idx_right < 64 and board[idx_right] is None:
+        return (loc[0], loc[1] + 1)
+    else:
+        return False
+
+board = [
+"black", None, "black", None, "black", None, "black", None,
+None,   "black", None, "black", None, "black", None, "black",
+"black", None, "black", None, "black", None, "black", None,
+None,    None, None, None, None, None, None, None,
+None,   None, None, None, None, None, None, None,
+None,   "white", None, "white", None, "white", None, "white",
+"white", "white", "white", None, "white", "white", "white", None,
+"white",   "white", None, "white", None, "white", None, "white"
+]
+x = get_one_move(board, (7, 5))
+print(x)

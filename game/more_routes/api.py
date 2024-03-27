@@ -34,7 +34,7 @@ def is_valid_move():
             return jsonify({"valid_move": True, "killed": False})
         elif enemy:
             return jsonify({"valid_move": True, "killed": True})
-        return jsonify({"valid_move": True})
+        return jsonify({"valid_move": False})
     elif piece_type == '♘' and knight_mv(start, end):
         if is_end(board, end):
             return jsonify({"valid_move": True, "killed": False})
@@ -95,52 +95,70 @@ def select_white_piece():
         loc = (row_idx, col_idx)
         start = {'row': row_idx, 'col': col_idx}
         if color == 'white':
+            print(piece)
             if piece == "♙":
                 end = bacward_diagonal(board, row_idx - 1, col_idx, loc)
                 target = end[0] * 8 + end[1] if end else False
                 if end and board[target] == "black":
                     end = {'row': end[0], 'col': end[1]}
                     return jsonify({'start_position': start, 'end_position': end, "killed": True})
-            elif piece == "♖":
+                elif end and board[target] is None:
+                    end = {'row': end[0], 'col': end[1]}
+                    sq.append((start, end))
+            if piece == "♖":
                 ends = longest_backward_move(board, row_idx, col_idx)
                 if ends and board[ends[0] * 8 + ends[1]] != "white":
                     end = {'row': ends[0], 'col': ends[1]}
                     if is_end(board, ends):
-                        return jsonify({'start_position': start, 'end_position': end, "killed": False})
-                    return jsonify({'start_position': start, 'end_position': end, "killed": True})
-            elif piece == '♘':
+                        sq.append((start, end))
+                    else:
+                        return jsonify({'start_position': start, 'end_position': end, "killed": True})
+            if piece == '♘':
                 pos = random_knight_mv(board, loc)
                 if pos:
                     x, y = pos
                     end = {'row': x, 'col': y}
                     flag = True if board[x * 8 + y] else False
-                    return jsonify({'start_position': start, 'end_position': end, "killed": flag})
-            elif piece == '♗':
+                    if flag:return jsonify({'start_position': start, 'end_position': end, "killed": flag})
+                    else:sq.append((start, end))
+            if piece == '♗':
                 end = bacward_diagonal(board, row_idx - 1, col_idx, loc)
                 target = end[0] * 8 + end[1] if end else False
+                print("biship end: ", end, board[target])
                 if end and board[target] == "black":
                     end = {'row': end[0], 'col': end[1]}
                     return jsonify({'start_position': start, 'end_position': end, "killed": True})
                 elif end:
-                    end = {'row': end[0], 'col': end[1]}
-                    sq.append(end)
-            elif piece == "♕":
+                    print(end)
+                    if is_end(board, end):
+                        end = {'row': end[0], 'col': end[1]}
+                        sq.append((start, end))
+            if piece == "♕":
                 ends = longest_backward_move(board, row_idx, col_idx)
                 if ends and board[ends[0] * 8 + ends[1]] != "white":
                     end = {'row': ends[0], 'col': ends[1]}
-                    if is_end(board, ends): sq.append((start, end))
-                    return jsonify({'start_position': start, 'end_position': end, "killed": True})
-            if is_end(board, (row_idx-1, col_idx)):
-                    start = {'row': row_idx, 'col': col_idx}
-                    end = {'row': row_idx - 1, 'col': col_idx}
-                    if is_end(board, (row_idx - 1,col_idx)): sq.append((start, end))
-
+                    if is_end(board, ends):
+                        sq.append((start, end))
+                    else:
+                        return jsonify({'start_position': start, 'end_position': end, "killed": True})
+            elif piece == '♔':
+               end = get_one_move(board, loc)
+               if end:
+                   idx = end[0] * 8 + end[1]
+                   end = {'row': end[0], 'col': end[1]}
+                   if idx < 64 and board[idx]:
+                       return jsonify({'start_position': start, 'end_position': end, "killed": True})
+                   else:sq.append((start, end))
+            if is_end(board, (row_idx-1, col_idx)) and piece != '♗':
+                start = {'row': row_idx, 'col': col_idx}
+                end = {'row': row_idx - 1, 'col': col_idx}
+                sq.append((start, end))
     if sq:
         start_position, end_position = random.choice(sq)
-        print(start_position, end_position)
     return jsonify({'start_position': start_position, 'end_position': end_position})
 
 
+    
     
 def bacward_diagonal(board, row, col, end):
     ran = col + 2
@@ -155,10 +173,15 @@ def bacward_diagonal(board, row, col, end):
 
 
 def random_knight_mv(board, start):
+    target = {"black":[], None: []}
     for n, loc in enumerate(board):
         x = n // 8
         y = n % 8
         
-        if knight_mv((x, y), start) and (loc == "black" or loc is None):
-            return (x, y)
+        if board[n] != 'white' and knight_mv((x, y), start):
+            target[loc].append((x, y))
+    if target['black']:
+        return random.choice(target['black'])
+    elif target[None]:
+        return random.choice(target[None])
     return False

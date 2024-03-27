@@ -1,5 +1,4 @@
 def longest_backward_move(board, row, col):
-
     last_black_backward = None
     last_black_left = None
     last_black_right = None
@@ -122,7 +121,6 @@ def is_diagonal(start, end):
     if dx == dy:
         squares_between = dx - 1
         if squares_between == 0:
-            print("No sqauare between them")
             return True
         else:
             print("more steps")
@@ -140,7 +138,6 @@ def is_forward(start, end):
 def is_all_none(board, start, end):
     start_x, start_y = start
     end_x, end_y = end
-
     if start_x == end_x:
         if start_y < end_y:
             for i in range(start_y + 1, end_y):
@@ -163,3 +160,46 @@ def is_all_none(board, start, end):
         return False
 
     return True
+
+
+
+def get_one_move(board, loc):
+    p_row = loc[0] + 1
+    p_column = loc[1]
+    next_row = loc[0] - 1
+    next_column = loc[1]
+    left_x, left_y = loc[0], loc[1] - 1
+    right_x, right_y = loc[0], loc[1] + 1
+
+    idx_left = left_x * 8 + left_y
+    idx_right = right_x * 8 + right_y
+    
+    idx_f = next_row * 8 + next_column
+    idx_b = p_row * 8 + p_column
+
+    if idx_f >= 0 and idx_f < 64 and board[idx_f] == "black":
+        return (next_row, next_column)
+    elif idx_left < 64 and board[idx_left] == "black":
+        return (loc[0], loc[1] - 1)
+    elif idx_right < 64 and board[idx_right] == "black":
+        return (loc[0], loc[1] + 1)
+    elif idx_f - 1 >= 0 and idx_f - 1 < 64 and board[idx_f - 1] == "black":
+        return (next_row, next_column - 1)
+    elif idx_f + 1 >= 0 and idx_f + 1 < 64 and board[idx_f + 1] == "black":
+        return (next_row, next_column + 1)
+    elif idx_b >= 0 and idx_b < 64 and board[idx_b] == "black":
+        return (p_row, p_column)
+    elif idx_b - 1 >= 0 and idx_b - 1 < 64 and board[idx_b - 1] == "black":
+        return (p_row , p_column - 1)
+    elif idx_b + 1 >= 0 and idx_b + 1 < 64 and board[idx_b + 1] == "black":
+        return (p_row , p_column + 1)
+    elif idx_f < 64 and board[idx_f] is None:
+        return (next_row, next_column)
+    elif idx_b < 64 and board[idx_b] is None:
+        return (p_row, p_column)
+    elif idx_left < 64 and board[idx_left] is None:
+        return (loc[0], loc[1] - 1)
+    elif idx_right < 64 and board[idx_right] is None:
+        return (loc[0], loc[1] + 1)
+    else:
+        return False

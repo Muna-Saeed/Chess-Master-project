@@ -32,7 +32,14 @@ function handleSquareClick(square) {
 		    if (isValidMove.killed){
 			const pieceType = endPiece.textContent.trim();
 			if (pieceType == '♔') {
-			    alert("game finish")
+			    for (let i = 0; i < 100; i++) {
+				setTimeout(createConfetti, Math.random() * 3000);
+			    }
+
+			    setTimeout(() => {
+				alert("Game finished\n new game will start");
+				location.reload();
+			    }, 7000);
 			}
 			square.removeChild(endPiece);
 		    }
@@ -152,6 +159,11 @@ function generateRandomMove() {
 	    console.log(end_position);
 	    if (response.killed) {
 		const pieceToRemove = end_square.querySelector('.piece');
+		const pieceType = pieceToRemove.textContent.trim();
+		if (pieceType == '♔') {
+		    alert("You lost\n new game will start");
+		    location.reload();
+		}
 		end_square.removeChild(pieceToRemove);
 	    }
 	    const pieceToMove = start_square.querySelector('.piece');
@@ -164,4 +176,16 @@ function generateRandomMove() {
         }
     };
     xhr.send(JSON.stringify({ board: pieceColors, pieceBoard: pieceBoard}));
+}
+
+
+
+function createConfetti() {
+  const confetti = document.createElement('div');
+  confetti.classList.add('confetti');
+  confetti.style.left = `${Math.random() * 100}vw`;
+  document.getElementById('celebration').appendChild(confetti);
+  setTimeout(() => {
+    confetti.remove();
+  }, 5000);
 }
