@@ -1,4 +1,4 @@
-# Chess Master muna
+# Chess Master
 ## Master the Chessboard: Play Against Friends or AI!
 
 ---
