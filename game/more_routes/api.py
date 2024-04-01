@@ -6,57 +6,69 @@ import re
 import requests
 import random
 from models.helper import *
+from models.legal_moves import *
+from models.game import Game
 
 api_route = Blueprint('other_routes1', __name__)
 
 
 
+game = None
+
+
+@api_route.route("/api/possible", methods=["POST"])
+def possible():
+    global game
+    data = request.json
+    board = game.board
+    start = data.get("start")
+    color = data.get("color")
+    piece_type = data.get("pieceType")
+
+    if piece_type == '♕':
+        game.queen_move = queen(board, start, color, "white", None)
+        return jsonify({"moves":game.queen_move})
+    elif piece_type == '♔':
+        game.king = king(board, start, color, "white", None)
+        return jsonify({"moves":game.king})
+    elif piece_type == '♗':
+        game.bishop_move = bishop(board, start, "black")
+        return jsonify({"moves": game.bishop_move})
+    elif piece_type == '♖':
+        game.rook = rook(board, start, color, "white")
+        return jsonify({"moves": game.rook})
+    elif piece_type == '♘' :
+        game.knight = faras(board, start, color, "white")
+        return jsonify({"moves": game.knight})
+    else:
+        game.pawn = black_pawn(board, start, piece_type)
+        return jsonify({"moves": game.pawn})
+        
+
+
 @api_route.route("/api/is_valid_move", methods=["POST"])
 def is_valid_move():
     data = request.json
-    board = data.get("board")
+    board = game.board
     color_board = data.get('boardColor')
     start = data.get("start")
     enemy = data.get("enemy")
     end = data.get("end")
+    idx = end[0] * 8 + end[1]
     piece_type = data.get("pieceType")
 
-    if piece_type == '♙' and is_infont(board, start, end) and count_sq(start, end) < 2 and is_forward(start, end):
-        if pawn_start.get((start[0], start[1])) == 0:
-            pawn_start[(start[0], start[1])] = 1
-            return jsonify({"valid_move": True, "killed": False})
-        elif count_sq(start, end) == 0:
-            return jsonify({"valid_move": True, "killed": False})
-    elif piece_type == '♙' and enemy and is_diagonal(start, end) and not is_end(board, end):
-            return jsonify({"valid_move": True, "killed": True})
-    elif piece_type == '♖' and is_all_none(board, start, end) and not is_diagonal(start, end):
-        if is_end(board, end):
-            return jsonify({"valid_move": True, "killed": False})
-        elif enemy:
-            return jsonify({"valid_move": True, "killed": True})
-        return jsonify({"valid_move": False})
-    elif piece_type == '♘' and knight_mv(start, end):
-        if is_end(board, end):
-            return jsonify({"valid_move": True, "killed": False})
-        elif enemy:
-            return jsonify({"valid_move": True, "killed": True})
-    elif piece_type == '♗' and is_diagonal(start, end):
-        if is_end(board, end):
-            return jsonify({"valid_move": True, "killed": False})
-        elif enemy:
-            return jsonify({"valid_move": True, "killed": True})
-    elif piece_type == '♔' and count_sq(start, end) == 0:
-        if is_end(board, end):
-            return jsonify({"valid_move": True, "killed": False})
-        elif enemy:
-            return jsonify({"valid_move": True, "killed": True})
-    elif piece_type == '♕' and ((sides(board, start, end) or is_infont(board, start, end)) or not is_diagonal(start, end)):
-        if is_end(board, end):
-            return jsonify({"valid_move": True, "killed": False})
-        elif enemy:
-            return jsonify({"valid_move": True, "killed": True})
-
-
+    if piece_type == '♙' and hasattr(game, 'pawn') and idx in game.pawn:
+            return jsonify({"valid_move": True, "killed": not is_end(board, end)})
+    elif piece_type == '♗' and hasattr(game, 'bishop_move') and idx in game.bishop_move:
+            return jsonify({"valid_move": True, "killed": not is_end(board, end)})
+    elif piece_type == '♖' and hasattr(game, 'rook') and idx in game.rook:
+        return jsonify({"valid_move": True, "killed": not is_end(board, end)})
+    elif piece_type == '♘' and hasattr(game, 'knight') and idx in game.knight:
+        return jsonify({"valid_move": True, "killed": not is_end(board, end)})
+    elif piece_type == '♔' and hasattr(game, 'king') and idx in game.king:
+        return jsonify({"valid_move": True, "killed": not is_end(board, end)})
+    elif piece_type == '♕' and hasattr(game, 'queen_move') and idx in game.queen_move:
+        return jsonify({"valid_move": True, "killed": not is_end(board, end)})
     return jsonify({"valid_move": False, "killed": False})
 
 
@@ -190,3 +202,16 @@ def random_knight_mv(board, start):
         return random.choice(target[None])
     return False
 
+
+@api_route.route('/api/board', methods=['POST'])
+def update_board():
+    global game
+    data = request.json
+    color_board = data.get('ColorBoard')
+    game_id = data.get('gameId')
+    user_id = data.get('userId')
+    game = storage.get(Game, game_id)
+    game.board = color_board
+    storage.save()
+    
+    return 'Board updated successfully', 200

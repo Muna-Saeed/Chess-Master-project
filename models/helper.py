@@ -72,7 +72,6 @@ def sides(board, start, end):
     x0, y0 = start
     x1, y1 = end
     if x0 != x1:
-        print("not same line")
         return False
     direction = 1 if y1 > y0 else -1
     squares = [(x0, y) for y in range(y0 + direction, y1, direction)]
@@ -109,9 +108,11 @@ def knight_mv(start, end):
 def is_end(board, end):
     """ check the end poition before moving to"""
     loc = end[0] * 8 + end[1]
-    if loc < 64 and board[end[0] * 8 + end[1]]:
+    if loc < 64 and board[loc] is not None:
         return False
-    return True
+    elif loc < 64:
+        return True
+    return False
 
 def is_diagonal(start, end):
     x0, y0 = start
@@ -123,7 +124,6 @@ def is_diagonal(start, end):
         if squares_between == 0:
             return True
         else:
-            print("more steps")
             return 0
     else:
         return False

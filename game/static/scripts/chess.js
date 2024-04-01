@@ -41,9 +41,9 @@ function createChessboard() {
                 const piecesOrder = [PIECE_TYPES.ROOK, PIECE_TYPES.KNIGHT, PIECE_TYPES.BISHOP, PIECE_TYPES.QUEEN, PIECE_TYPES.KING, PIECE_TYPES.BISHOP, PIECE_TYPES.KNIGHT, PIECE_TYPES.ROOK];
                 square.innerHTML = `
                     <div class="piece ${pieceColor}">
-                        <div class="piece-inner">
-                            ${piecesOrder[col]}
-                        </div>
+                            <div class="piece-inner">
+                                ${piecesOrder[col]}
+                            </div>
                     </div>`;
             } else {
                 square.innerHTML = ''; // Empty square
@@ -56,4 +56,3 @@ function createChessboard() {
 
 // Call createChessboard when the page loads
 window.onload = createChessboard;
-

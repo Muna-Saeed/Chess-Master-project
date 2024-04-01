@@ -1,22 +1,22 @@
 function handleSquareClick(square) {
     console.log("handleSquareClick function called");
 
+    updateBoard();
+    
     if (selectedSquare) {
-        console.log("Selected square exists");
+        removePossibleClass();
 
         const piece = selectedSquare.querySelector('.piece');
 	const endPiece = square.querySelector('.piece');
 	const enemy = getPieceColor(piece) != getPieceColor(endPiece);
-	console.log(enemy);
-
+	const ColorBoard = boardOfColors();
         const startPosition = getPosition(selectedSquare);
         const endPosition = getPosition(square);
 
         const pieceType = piece.textContent.trim();
-        console.log(pieceType);
+
         // Get the current state of the board
         const board = getCurrentBoardState();
-	const ColorBoard = boardOfColors();
 
         // Send an AJAX request to check if the move is valid
         const xhr = new XMLHttpRequest();
@@ -61,12 +61,43 @@ function handleSquareClick(square) {
     } else {
 	const piece = square.querySelector('.piece');
 	if (getPieceColor(piece) == userColor){
+	    possible_moves(square, piece);
 	    square.classList.add('selected');
 	    selectedSquare = square;
+	    
 	} else {
 	    console.log("user not allowed");
 	}
     }
+}
+
+
+function possible_moves(square, piece) {
+
+    const pieceType = piece.textContent.trim();
+    const color = getPieceColor(piece);
+    const start = getPosition(square);
+    const board = getChessboardSquares();
+    const xhr = new XMLHttpRequest();
+    const ColorBoard = boardOfColors();
+    xhr.open("POST", "/api/possible", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function () {
+	if (xhr.readyState === 4 && xhr.status === 200) {
+	    const moves = JSON.parse(xhr.responseText).moves;
+	    
+	    moves.forEach(index => {
+                const square = board[index];
+		square.classList.add('possible');
+		const dotContainer = document.createElement('div');
+                dotContainer.classList.add('dot-container');
+                square.appendChild(dotContainer);
+	     });
+	}
+    }
+
+    xhr.send(JSON.stringify({ color:color, start:start, board:ColorBoard, pieceType:pieceType}));
+	  
 }
 
 
@@ -98,6 +129,8 @@ function getCurrentBoardState() {
 
     return board;
 }
+
+
 function getChessboardSquares() {
     const chessboard = document.getElementById('chessboard');
     const squares = chessboard.querySelectorAll('.square');
@@ -131,7 +164,6 @@ function boardOfColors(){
         const piece = square.querySelector('.piece');
         if (piece) {
             const color = getPieceColor(piece);
-            console.log(color);
             pieceColors.push(color);
         } else {
             pieceColors.push(null);
@@ -141,6 +173,7 @@ function boardOfColors(){
 }
 
 function generateRandomMove() {
+    updateBoard();
     const pieceColors = boardOfColors();
     const pieceBoard = getCurrentBoardState();
     const xhr = new XMLHttpRequest();
@@ -188,4 +221,27 @@ function createConfetti() {
   setTimeout(() => {
     confetti.remove();
   }, 5000);
+}
+
+
+function removePossibleClass() {
+    const squares = document.querySelectorAll('.possible');
+    squares.forEach(square => {
+        square.classList.remove('possible');
+    });
+}
+
+
+
+function updateBoard(){
+       console.log(userId);
+    console.log(gameId);
+    const ColorBoard = boardOfColors();
+    fetch('/api/board', {
+	method: 'POST',
+	headers: {
+	    'Content-Type': 'application/json'
+	},
+	body: JSON.stringify({ ColorBoard: ColorBoard, gameId:gameId, userId:userId })
+    });
 }

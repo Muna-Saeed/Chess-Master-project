@@ -101,7 +101,7 @@ footer {
     color: #000;
 }
 .selected {
-    background:red;
+    background:lightblue;
     border-radius:50%;
 }
 
@@ -135,6 +135,24 @@ footer {
   width: 100vw;
   height: 100vh;
   z-index: 9999; 
-  pointer-events: none; /* Allow interaction with elements behind the celebration */
+  pointer-events: none; 
   overflow: hidden;
+}
+
+
+.possible {
+    position: relative;
+}
+
+.possible::after {
+    content: '';
+    display: block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: green;
+    position: absolute;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
 }

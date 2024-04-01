@@ -2,6 +2,7 @@
 from flask import Blueprint, redirect, request, jsonify, render_template, session
 from models import storage
 from models.user import User
+from models.game import Game
 import re
 
 routes = Blueprint('other_routes', __name__)
@@ -61,7 +62,11 @@ def play(id):
     user = storage.get(User, id)
     if user:
         user.color = "black"
-        return render_template('chess_board.html', user=user)
+        game = Game()
+        game.player1_id = user.id
+        storage.new(game)
+        storage.save()
+        return render_template('chess_board.html', user=user, game=game)
     return render_template('login.html')
 
 @routes.route('/user', defaults={'user_id': None})

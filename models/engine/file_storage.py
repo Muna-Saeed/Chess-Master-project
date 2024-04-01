@@ -7,9 +7,10 @@ import json
 import models
 from models.base_model import BaseModel
 from models.user import User
+from models.game import Game
 from hashlib import md5
 
-classes = {"BaseModel": BaseModel, "User": User}
+classes = {"BaseModel": BaseModel, "User": User, "Game":Game}
 
 
 class FileStorage:

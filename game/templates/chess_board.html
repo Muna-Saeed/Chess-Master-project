@@ -28,6 +28,8 @@
       <div class="chessboard" id="chessboard"></div>
       <script>
         userColor = '{{ user.color }}';
+	userId = '{{ user.id }}';
+	gameId = '{{game.id}}'
 	function playValidSound() {
             var audio = document.getElementById('valid-sound');
             audio.play();
@@ -45,5 +47,6 @@
       <script src="static/scripts/scripts.js"></script>
       <script src="/static/scripts/move.js"></script>
       <script src="/static/scripts/chess.js"></script>
+  
 </body>
 </html>
