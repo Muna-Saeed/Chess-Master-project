@@ -158,6 +158,10 @@ def select_white_piece():
     return jsonify({'start_position': start_position, 'end_position': end_position})
 
 
+@api_route.route('/game', methods=['POST'])
+def leter_name():
+    board = request.json['board']
+    return jsonify({'baord': board})
     
     
 def bacward_diagonal(board, row, col, end):
@@ -185,3 +189,4 @@ def random_knight_mv(board, start):
     elif target[None]:
         return random.choice(target[None])
     return False
+

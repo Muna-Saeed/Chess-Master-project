@@ -1,11 +1,13 @@
 #!/usr/bin/python3
-from flask import Blueprint, redirect, request, jsonify, render_template
-from models.user import User
+from flask import Blueprint, redirect, request, jsonify, render_template, session
 from models import storage
+from models.user import User
 import re
 
 routes = Blueprint('other_routes', __name__)
 emails = storage.get_user_email();
+
+
 
 @routes.errorhandler(405)
 def method_not_allowed(e):
@@ -48,7 +50,9 @@ def auth():
     pasw = request.form.get("pasw");
     obj = storage.auth(username);
     if obj and obj.pasw == pasw:
-        return render_template("index.html", user=obj)
+        online_users.append(obj)
+        print(online_users)
+        return render_template('index.html', user=obj)
     return render_template('login.html', message="incorrect password or username!")
 
 
@@ -83,4 +87,17 @@ def is_valid_password(password):
     return re.match(regex, password) is not None
 
 
+online_users = []
 
+@routes.route('/getOnlineUsers')
+def get_online():
+    return jsonify({"online": [i.to_dict() for i in online_users]})
+
+
+@routes.route('/logout/<user_id>')
+def logout(user_id):
+    for i in online_users:
+        if i.id == user_id:
+            online_user.remove(i)
+            break
+    return redirect('/')

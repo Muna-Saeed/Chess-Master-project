@@ -1,12 +1,16 @@
 # Chess Master project using Flask for the backend
-
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session, redirect
 from game.more_routes.user import routes
 from game.more_routes.api import api_route
+from flask_session import Session
 
 app = Flask(__name__)
 app.register_blueprint(routes)
 app.register_blueprint(api_route)
+app.config['SECRET_KEY'] = 'Chess@game%%%@90'
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config["SESSION_PERMANENT"] = False
+Session(app)
 
 # Sample data for demonstration
 players = {
@@ -18,6 +22,9 @@ games = []
 
 @app.route('/')
 def index():
+    user_id = session.get('user_id')
+    print(user_id)
+    print("in teh /", session.sid)
     return render_template('index.html')
 
 @app.route('/play')
@@ -48,6 +55,8 @@ def manage_games():
         data = request.get_json()
         # Logic to create a new game, add to 'games' list, etc.
         return jsonify({"message": "New game created"})
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
