@@ -9,40 +9,54 @@ from models.helper import *
 from models.legal_moves import *
 from models.game import Game
 
+
+
 api_route = Blueprint('other_routes1', __name__)
 
 
 
 game = None
-
+board =  [None] * 64
+board[:16] = ["black"] * 16
+board[-16:] = ["white"] * 16
 
 @api_route.route("/api/possible", methods=["POST"])
 def possible():
     global game
     data = request.json
-    board = game.board
+    if game:
+        board = game.board
+    else:
+        board = board
     start = data.get("start")
     color = data.get("color")
     piece_type = data.get("pieceType")
+    
+    enemy = "white" if color == "black" else "black"
+
 
     if piece_type == '♕':
-        game.queen_move = queen(board, start, color, "white", None)
+        game.queen_move = queen(board, start, color, enemy, None)
         return jsonify({"moves":game.queen_move})
     elif piece_type == '♔':
-        game.king = king(board, start, color, "white", None)
+        game.king = king(board, start, color, enemy, None)
         return jsonify({"moves":game.king})
     elif piece_type == '♗':
-        game.bishop_move = bishop(board, start, "black")
+        game.bishop_move = bishop(board, start, color)
         return jsonify({"moves": game.bishop_move})
     elif piece_type == '♖':
-        game.rook = rook(board, start, color, "white")
+        game.rook = rook(board, start, color, enemy)
         return jsonify({"moves": game.rook})
     elif piece_type == '♘' :
-        game.knight = faras(board, start, color, "white")
+        game.knight = faras(board, start, color, enemy)
         return jsonify({"moves": game.knight})
     else:
-        game.pawn = black_pawn(board, start, piece_type)
-        return jsonify({"moves": game.pawn})
+        if color == "black":
+            game.pawn = black_pawn(board, start, game)
+            return jsonify({"moves": game.pawn})
+        else:
+            game.pawn = white_pawn(board, start, game)
+            return jsonify({"moves": game.pawn})
         
 
 
@@ -51,6 +65,7 @@ def is_valid_move():
     data = request.json
     board = game.board
     color_board = data.get('boardColor')
+    color = data.get("color")
     start = data.get("start")
     enemy = data.get("enemy")
     end = data.get("end")
@@ -72,24 +87,7 @@ def is_valid_move():
     return jsonify({"valid_move": False, "killed": False})
 
 
-pawn_start = {
-    (1, 0): 0,
-    (1, 1): 0,
-    (1, 2): 0,
-    (1, 3): 0,
-    (1, 4): 0,
-    (1, 5): 0,
-    (1, 6): 0,
-    (1, 7): 0,
-    (6, 0): 0,
-    (6, 1): 0,
-    (6, 2): 0,
-    (6, 3): 0,
-    (6, 4): 0,
-    (6, 5): 0,
-    (6, 6): 0,
-    (6, 7): 0
-}
+
 
 
 
@@ -209,9 +207,26 @@ def update_board():
     data = request.json
     color_board = data.get('ColorBoard')
     game_id = data.get('gameId')
+    print(game_id)
     user_id = data.get('userId')
     game = storage.get(Game, game_id)
-    game.board = color_board
-    storage.save()
+    if (game):
+        game.board = color_board
+    elif game_id:
+        game = Game()
+        game.id = game_id
+        game.board = color_board
+        storage.new(game)
+    else:
+        return "not game"
+    
+
     
     return 'Board updated successfully', 200
+
+
+@api_route.route('/api/invite', methods=['POST'])
+def invite():
+    data = request.json
+    player_id = data['player_id']
+    return 'ok', 200

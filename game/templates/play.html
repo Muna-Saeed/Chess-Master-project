@@ -3,32 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Play Chess - Chess Master</title>
-    <link rel="stylesheet" href="static/styles/styles.css">
+    <title>Chess Master</title>
+   
+    <link href="/static/styles/chessboard.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/styles/popup.css">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+	<script src="/static/scripts/sockets.js"></script>
+	<script>
+	  userId = '{{user.id}}';
+	  username = '{{user.username}}';
+	</script>
+	<style>
+	  .container {
+              height: 80vh;
+              position: absolute;
+	      border:6px solid black;
+	      right: 0;
+	      top:10vh;
+	      display:none;
+	  }
+	  .chat-box {
+              top: 0;
+              width: 20vw;
+              height: 80vh;
+              background-color: #f0f0f0;
+              border: 6px solid #ccc;
+              overflow-y: auto;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+	  }
+	  .chat-box-content {
+              padding: 0px;
+	  }
+
+	  .chat-box input[type="text"],
+	  .chat-box input[type="button"] {
+              margin: 0px;
+              padding: 0px;
+              border: 1px solid #ccc;
+              border-radius: 3px;
+	  }
+	  .chat-box input[type="button"] {
+              cursor: pointer;
+	  }
+	</style>
 </head>
 <body>
     <header>
-        <h1>Play Chess</h1>
+        <h1>Chess Master</h1>
         <nav>
+            {% if user %}
+                <p>{{ user.username }}</p>
+            {% endif %}
             <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/play">Play</a></li>
-		<li><a href="/create">Login</a></li>
-                <li><a href="/user">User Profile</a></li>
-                <li><a href="/history">Game_History</a></li>
+              <li><a href="/">Home</a></li>
+                {% if user %}
+                    <li><a href="/play/{{ user.id }}">Play</a></li>
+                {% else %}
+                    <li><a href="/play">Play</a></li>
+                {% endif %}
+                <li><a href="/create">Login</a></li>
+                <li>
+                    {% if user %}
+                        <a href="/user/{{ user.id }}">User Profile</a>
+                    {% else %}
+                        <a href="/user">User Profile</a>
+                    {% endif %}
+                </li>
+                <li><a href="/history">Game History</a></li>
                 <li><a href="/settings">Settings</a></li>
             </ul>
         </nav>
     </header>
     <main>
-        <h2>Game Board</h2>
-        <div id="chessboard">
-            <!-- Chessboard UI will be rendered here -->
-        </div>
+           
+      <h2>Welcome to Chess Master</h2>
+      <audio id="valid-sound" src="{{ url_for('static', filename='sounds/valid_sound.wav') }}"></audio>
+      <audio id="invalid-sound" src="{{ url_for('static', filename='sounds/invalid_sound.wav') }}"></audio>
+            <div class="chessboard" id="chessboard"></div>
+      <script>
+        function playValidSound() {
+            var audio = document.getElementById('valid-sound');
+            audio.play();
+        }
+        function playInValidSound() {
+            var audio = document.getElementById('invalid-sound');
+            audio.play();
+        }
+      </script>
+      <div class="container", id="container">
+	<div class="chat-box">
+          <div class="chat-box-content" id="chat">
+            <!-- Chat content goes here -->
+          </div>
+          <div>
+            <input type="text" id="message" placeholder="Type your message..." onkeypress="handleKeyPress(event)"/>
+            <input type="button" id="send" value="Send", onclick="chat()"/>
+          </div>
+	</div>
+      </div>
+ 
+        <div id="before"><p>Play chess online against friends or the computer!</p>
+          {% if user %}
+          <button onclick="window.location.href='/play/{{user.id}}'">Play with Computer</button>
+          {% else %}
+          <button onclick="window.location.href='/play'">Play with Computer</button>
+          {% endif %}
+          <h2>Online Players</h2>
+          <ul id= "online">
+	    {% if players %}
+	    {% for player in players %}
+	      <li> {{player.username}}    <button id="{{player.username}}" onclick="sendMessage('{{player.id}}')">Invite To Play</button></li>
+	    {%endfor%}
+	    {%endif%}
+          </ul>
+
+	  <div id="popup" class="popup">
+	    <p>You have received an invitation. Do you want to accept?</p>
+	    <div class="popup-buttons">
+              <button onclick="accept()">Accept</button>
+              <button onclick="decline()">Decline</button>
+	    </div>
+	  </div>
+	</div>
     </main>
     <footer>
         <p>&copy; 2024 Chess Master. All rights reserved.</p>
     </footer>
-    <script src="static/scripts/scripts.js"></script>
+
+    <script src="/static/scripts/chess.js"></script>
+    <script src="/static/scripts/move.js"></script>
+    <script>
+
+      function handleKeyPress(event) {
+	  if (event.keyCode === 13) {
+              chat();
+	  }
+      }
+      const chat = () => {
+	  contents = document.getElementById("message");
+	  val = contents.value;
+	  if (val.length > 0) {
+	      contents.value = "";
+	      socket.emit("message", {from_id: userId,  to_id: userId, message: "chat", 'room': room, content:val});
+	  }
+	  
+      }
+       computer = false;
+    </script>
 </body>
 </html>

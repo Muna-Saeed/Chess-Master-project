@@ -1,8 +1,6 @@
 function handleSquareClick(square) {
     console.log("handleSquareClick function called");
-
     updateBoard();
-    
     if (selectedSquare) {
         removePossibleClass();
 
@@ -15,10 +13,8 @@ function handleSquareClick(square) {
 
         const pieceType = piece.textContent.trim();
 
-        // Get the current state of the board
         const board = getCurrentBoardState();
 
-        // Send an AJAX request to check if the move is valid
         const xhr = new XMLHttpRequest();
         xhr.open("POST", "/api/is_valid_move", true);
         xhr.setRequestHeader("Content-Type", "application/json");
@@ -48,19 +44,24 @@ function handleSquareClick(square) {
                     selectedSquare.classList.remove('selected');
                     selectedSquare = null;
                     square.appendChild(piece);
-		    generateRandomMove(board);
+		    if (computer) {
+			generateRandomMove();
+		    }
+		    else {
+			turn = false;
+			socket.emit("message", {"message":"board", start:startPosition, end:endPosition, game:gameId});
+		    }
                 } else {
 		    playInValidSound();
 		    selectedSquare.classList.remove('selected');
-		    selectedSquare = null;
-		    
+		    selectedSquare = null;		    
                 }
             }
         };
-        xhr.send(JSON.stringify({ board: board, boardColor:ColorBoard, enemy:enemy, start: startPosition, end: endPosition, pieceType: pieceType}));
+        xhr.send(JSON.stringify({ board: board, boardColor:ColorBoard, enemy:enemy, start: startPosition, end: endPosition, pieceType: pieceType, color:userColor}));
     } else {
 	const piece = square.querySelector('.piece');
-	if (getPieceColor(piece) == userColor){
+	if (getPieceColor(piece) == userColor && turn){
 	    possible_moves(square, piece);
 	    square.classList.add('selected');
 	    selectedSquare = square;
@@ -235,7 +236,6 @@ function removePossibleClass() {
 
 function updateBoard(){
        console.log(userId);
-    console.log(gameId);
     const ColorBoard = boardOfColors();
     fetch('/api/board', {
 	method: 'POST',
@@ -245,3 +245,5 @@ function updateBoard(){
 	body: JSON.stringify({ ColorBoard: ColorBoard, gameId:gameId, userId:userId })
     });
 }
+
+updateBoard();

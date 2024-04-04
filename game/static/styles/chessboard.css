@@ -1,7 +1,9 @@
 /* Style for chessboard */
 
 
-
+audio {
+    display:none;
+}
 
 /* Reset default margin and padding */
 html, body {
@@ -16,6 +18,7 @@ body {
     background-color: #f0f0f0;
     color: #333;
 }
+
 
 header {
     background-color: #444;
@@ -68,7 +71,7 @@ footer {
 }
 
 .chessboard {
-    display: grid;
+    display: none;
     grid-template-columns: repeat(8, minmax(0, 12.5vw));
     grid-template-rows: repeat(8, minmax(0, 12.5vh));
     width: 80%;

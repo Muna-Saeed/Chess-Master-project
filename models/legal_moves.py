@@ -1,4 +1,6 @@
 from models.helper import *
+from models.game import Game
+
 
 
 def queen(board, start, color, enemy, piece_tye):
@@ -21,21 +23,44 @@ def king(board, start, color, enemy, piece_type):
     if idx < 64 and idx > 0 and (board[idx] is None or board[idx] == enemy):
         target.append(idx)
     print(target)
-    target += black_pawn(board, start, piece_type) + bishop(board, start,  color)
+    target += black_pawn(board, start, None) + bishop(board, start,  color)
     
     return target
 
-def black_pawn(board, start, piece_type):
+def black_pawn(board, start, game):
     possible_moves = []
     row, col = start
-    if row + 1 < 8 and board[(row + 1) * 8 + col] is None:
+    if row + 1 < 8 and col < 8 and board[(row + 1) * 8 + col] is None:
         possible_moves.append((row + 1) * 8 + col)
+    idx = start[0] * 8 + start[1]
+    if game and idx < 16 and not game.first_move[str(idx)]:
+        possible_moves.append((row + 2) * 8 + col)
+        game.first_move[str(idx)] = True
 
     for i in range(row + 1, row + 2):
         for j in [col - 1, col + 1]:
             idx = i * 8 + j
             if i < 8 and j < 8 and i >= 0 and j >= 0:
                 if board[idx] == "white":
+                    possible_moves.append(idx)
+    return possible_moves
+
+
+def white_pawn(board, start, game):
+    possible_moves = []
+    row, col = start
+    if row - 1 < 8 and col < 8 and board[(row - 1) * 8 + col] is None:
+        possible_moves.append((row - 1) * 8 + col)
+    idx = start[0] * 8 + start[1]
+    if game and idx > 47 and idx < 56 and not game.first_move[str(idx)]:
+        possible_moves.append((row - 2) * 8 + col)
+        game.first_move[str(idx)] = True
+
+    for i in range(row - 1, row):
+        for j in [col - 1, col + 1]:
+            idx = i * 8 + j
+            if i < 8 and j < 8 and i >= 0 and j >= 0:
+                if board[idx] == "black":
                     possible_moves.append(idx)
     return possible_moves
 
@@ -60,6 +85,7 @@ def bishop(board, start,  color):
 
 def rook(board, start, color, enemy):
     row, col = start
+    print(enemy)
     possible = []
     for i in range(row - 1, -1, -1):
         if board[i * 8 + col] == color:
@@ -76,6 +102,7 @@ def rook(board, start, color, enemy):
         elif board[row * 8 + j] == color:
             break
         possible.append(row * 8 + j)
+    print(possible)
 
     for k in range(col + 1, 8):
         if board[row * 8 + k] == color:

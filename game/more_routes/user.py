@@ -9,14 +9,15 @@ routes = Blueprint('other_routes', __name__)
 emails = storage.get_user_email();
 
 
-
 @routes.errorhandler(405)
 def method_not_allowed(e):
     return redirect('/')
 
+
 @routes.route('/create')
 def sigup():
     return render_template('signup.html')
+
 
 @routes.route('/login')
 def login():
@@ -45,29 +46,23 @@ def check_new_user():
     storage.save()
     return render_template('login.html', welcome="Now you can login")
 
-@routes.route('/auth', methods=["POST"])
-def auth():
-    username = request.form.get("username");
-    pasw = request.form.get("pasw");
-    obj = storage.auth(username);
-    if obj and obj.pasw == pasw:
-        online_users.append(obj)
-        print(online_users)
-        return render_template('index.html', user=obj)
-    return render_template('login.html', message="incorrect password or username!")
+
+
 
 
 @routes.route('/play/<id>')
 def play(id):
     user = storage.get(User, id)
+    print(user)
     if user:
         user.color = "black"
         game = Game()
+        game.first_move = {str(1 * 8 + i):False for i in range(8)}
         game.player1_id = user.id
         storage.new(game)
-        storage.save()
         return render_template('chess_board.html', user=user, game=game)
     return render_template('login.html')
+
 
 @routes.route('/user', defaults={'user_id': None})
 @routes.route('/user/<user_id>')
@@ -78,14 +73,15 @@ def profile(user_id):
     return render_template('login.html')
 
 
-
 def is_valid_email(email):
     regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(regex, email) is not None
 
+
 def is_valid_username(username):
     regex = r'^[a-zA-Z][a-zA-Z0-9]{2,19}$'
     return re.match(regex, username) is not None
+
 
 def is_valid_password(password):
     regex = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$'
