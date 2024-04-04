@@ -67,7 +67,7 @@ def connect(auth):
         join_room(room)
         rooms[room]['members'] += 1
         send({"name":name, "message": 'connected', 'player_id':player_id}, to=room)
-        print("joined **************")
+        print("joined ************** ", name)
     else:
         print(" not joined **************")
 
@@ -79,11 +79,12 @@ def disconnect():
         leave_room(key)
         send({"name":name, "message": 'diconnected', 'player_id':player_id}, to=key)
         
-    print("leaved **************")
+    print("leaved **************", name)
 
 
 @socketio.on('message')
 def handle_message(data):
+    print(data)
     if data["message"] == "board":
         room = session.get("gameId")
         player_id = session.get("player_id")
