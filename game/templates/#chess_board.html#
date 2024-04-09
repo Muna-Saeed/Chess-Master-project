@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play Chess Game</title>
+    <link href="/static/styles/chessboard.css" rel="stylesheet"></link>
+    <style>
+      .container {
+          height: 100%;
+          position: absolute;
+	  border:14px solid black;
+	  right: 0;
+      }
+      .chat-box {
+	  border:14px solid black;
+          top: 0;
+          right: 0;
+          width: 20vw;
+          height: 80vh;
+          background-color: #f0f0f0;
+          border: 1px solid #ccc;
+          overflow-y: auto; /* Enable vertical scrollbar */
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+      }
+    .chat-box-content {
+        padding: 10px;
+    }
+    /* Additional styling for better appearance */
+    .chat-box input[type="text"],
+    .chat-box input[type="button"] {
+        margin: 10px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+    .chat-box input[type="button"] {
+        cursor: pointer;
+    }
+    </style>
+
+
+</head>
+<body>
+   <header>
+        <h1>Play Chess</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/play">Play</a></li>
+		<li><a href="/create">Login</a></li>
+                <li><a href="/user/{{user.id}}">User Profile</a></li>
+                <li><a href="/history">Game_History</a></li>
+                <li><a href="/settings">Settings</a></li>
+            </ul>
+        </nav>
+    </header>
+  <audio id="valid-sound" src="{{ url_for('static', filename='sounds/valid_sound.wav') }}"></audio>
+  <audio id="invalid-sound" src="{{ url_for('static', filename='sounds/invalid_sound.wav') }}"></audio>
+
+  <main>   
+    <h2>{{user.name}}<h2>
+	  <div id="celebration"></div>
+	  <div class="chessboard" id="chessboard"></div>
+      <script>
+        userColor = '{{ user.color }}';
+	userId = '{{ user.id }}';
+	gameId = '{{game.id}}'
+	turn = true;
+	computer = true;
+	function playValidSound() {
+            var audio = document.getElementById('valid-sound');
+            audio.play();
+        }
+	function playInValidSound() {
+	    var audio = document.getElementById('invalid-sound');
+            audio.play();
+	}
+	document.getElementById("chessboard").style.display = "grid";
+      </script>
+  </main>
+  <footer>
+      <p>&copy; 2024 Chess Master. All rights reserved.</p>
+  </footer>
+      <script src="static/scripts/scripts.js"></script>
+      <script src="/static/scripts/move.js"></script>
+      <script src="/static/scripts/chess.js"></script>
+  
+</body>
+</html>

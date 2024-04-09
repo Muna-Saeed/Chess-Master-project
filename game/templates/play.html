@@ -6,48 +6,14 @@
     <title>Chess Master</title>
    
     <link href="/static/styles/chessboard.css" rel="stylesheet">
+     <link href="/static/styles/chat.css" rel="stylesheet">
     <link rel="stylesheet" href="static/styles/popup.css">
             <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
-	<script src="/static/scripts/sockets.js"></script>
+	    <script src="/static/scripts/sockets.js"></script>
 	<script>
 	  userId = '{{user.id}}';
 	  username = '{{user.username}}';
 	</script>
-	<style>
-	  .container {
-              height: 80vh;
-              position: absolute;
-	      border:6px solid black;
-	      right: 0;
-	      top:10vh;
-	      display:none;
-	  }
-	  .chat-box {
-              top: 0;
-              width: 20vw;
-              height: 80vh;
-              background-color: #f0f0f0;
-              border: 6px solid #ccc;
-              overflow-y: auto;
-              display: flex;
-              flex-direction: column;
-              justify-content: space-between;
-	  }
-	  .chat-box-content {
-              padding: 0px;
-	  }
-
-	  .chat-box input[type="text"],
-	  .chat-box input[type="button"] {
-              margin: 0px;
-              padding: 0px;
-              border: 1px solid #ccc;
-              border-radius: 3px;
-	  }
-	  .chat-box input[type="button"] {
-              cursor: pointer;
-	  }
-	</style>
 </head>
 <body>
     <header>
@@ -78,7 +44,7 @@
     </header>
     <main>
            
-      <h2>Welcome to Chess Master</h2>
+      <h2 id="title"> Welcome to Chess Master </h2>
       <audio id="valid-sound" src="{{ url_for('static', filename='sounds/valid_sound.wav') }}"></audio>
       <audio id="invalid-sound" src="{{ url_for('static', filename='sounds/invalid_sound.wav') }}"></audio>
             <div class="chessboard" id="chessboard"></div>
@@ -91,18 +57,48 @@
             var audio = document.getElementById('invalid-sound');
             audio.play();
         }
+
       </script>
+
       <div class="container", id="container">
-	<div class="chat-box">
-          <div class="chat-box-content" id="chat">
-            <!-- Chat content goes here -->
-          </div>
-          <div>
-            <input type="text" id="message" placeholder="Type your message..." onkeypress="handleKeyPress(event)"/>
-            <input type="button" id="send" value="Send", onclick="chat()"/>
-          </div>
+	<div class="chatbox", id="chatbox">
+	  <div class="bar">
+            <div class="positioning-container-bar">
+              <div class="status"></div>
+              <div class="name", id="name">'</div>
+            </div>
+	  </div>
+	  
+	  <div class="chat-history" id="chat-history">
+	  </div>
+	  <div class="chat-input">
+            <div class="positioning-container-chat">
+              <input type="text" id="chat-text" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
+            </div>
+	  </div>
+
+	  <div class="chat-actions">
+            <div class="positioning-container-chat-actions">
+              <div class="actions">
+		<div class="action">
+		  <i class="fas fa-image"></i>
+		</div>
+		<div class="action">
+		  <i class="fas fa-stop"></i>
+		</div>
+		<div class="action">
+		  <i class="fas fa-grin"></i>
+		</div>
+		<div class="action">
+		  <i class="fas fa-camera"></i>
+		</div>
+              </div>
+            </div>
+	  </div>
+	  
 	</div>
       </div>
+  
  
         <div id="before"><p>Play chess online against friends or the computer!</p>
           {% if user %}
@@ -114,7 +110,7 @@
           <ul id= "online">
 	    {% if players %}
 	    {% for player in players %}
-	      <li> {{player.username}}    <button id="{{player.username}}" onclick="sendMessage('{{player.id}}')">Invite To Play</button></li>
+	      <li> {{player.username}}<button id="{{player.username}}" onclick="sendMessage('{{player.id}}')">Invite To Play</button></li>
 	    {%endfor%}
 	    {%endif%}
           </ul>
@@ -135,18 +131,18 @@
     <script src="/static/scripts/chess.js"></script>
     <script src="/static/scripts/move.js"></script>
     <script>
-
+      
       function handleKeyPress(event) {
 	  if (event.keyCode === 13) {
               chat();
 	  }
       }
       const chat = () => {
-	  contents = document.getElementById("message");
+	  contents = document.getElementById("chat-text");
 	  val = contents.value;
 	  if (val.length > 0) {
 	      contents.value = "";
-	      socket.emit("message", {from_id: userId,  to_id: userId, message: "chat", 'room': room, content:val});
+	      socket.emit("chat", {from_id: userId,  to_id: userId, 'room': room, content:val});
 	  }
 	  
       }

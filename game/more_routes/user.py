@@ -4,6 +4,9 @@ from models import storage
 from models.user import User
 from models.game import Game
 import re
+import os
+from PIL import Image
+
 
 routes = Blueprint('other_routes', __name__)
 emails = storage.get_user_email();
@@ -102,3 +105,42 @@ def logout(user_id):
             online_user.remove(i)
             break
     return redirect('/')
+
+
+
+@routes.route('/upload', methods=['POST'])
+def upload():
+    user_id = session.get("player_id")
+    user = storage.get(User, user_id)
+    if not user:
+        return jsonify({'message': 'File upload Failed'})
+    if 'profile_picture' not in request.files:
+        return jsonify({'error': 'No file part'})
+
+    file = request.files['profile_picture']
+
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'})
+    
+    filename, file_extension = os.path.splitext(file.filename)
+    filename = '/static/images/profile/' + user_id + file_extension
+    user.img = filename
+    storage.save()
+
+    absolute_filename = '/home/ubuntu/Chess-Master-project/game' + filename
+
+    img = Image.open(file)
+
+    new_width = 150
+    new_height = 150
+
+    resized_img = img.resize((new_width, new_height))
+
+    resized_img.save(absolute_filename)
+
+    return jsonify({'message': 'File uploaded successfully'})
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True)

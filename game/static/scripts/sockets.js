@@ -1,4 +1,13 @@
-var socket = io();
+var socket = io({
+  reconnect: true,
+  reconnectionAttempts: 3,
+  reconnectionDelay: 1000,
+  reconnectionDelayMax: 5000,
+  randomizationFactor: 0.5,
+  timeout: 20000,
+  autoConnect: true,
+});
+
 var from_id = null;
 var room = null;
 var turn = null;
@@ -12,14 +21,13 @@ function createMessage(name, message) {
 function sendMessage(player_id) {
     userColor = "black";
     turn = true;
-    socket.emit("message", {from_name:username, from_id:userId,  message: "invite" });
+    socket.emit("invite", {from_name:username, from_id:userId,  message: "invite" });
 }
 
 socket.on("message", function(data) {
     if (data.player_id != userId) {
 	if (data.message == "board") {
 	    turn = true;
-
 	    const board = getChessboardSquares();
 	    start_square = board[data.start[0] * 8 + data.start[1]];
 	    end_square = board[data.end[0] * 8 + data.end[1]];
@@ -38,32 +46,23 @@ socket.on("message", function(data) {
 	    start_square.removeChild(pieceToMove);
 	    end_square.appendChild(pieceToMove);
 	}
+
 	else if (data.message == "chat")
 	{
-	    document.getElementById("chat").innerHTML += `<p>${data.name}: ${data.content}</p>`;
+	    const chatHistory = document.getElementById("chat-history");
+	    const messageElement = document.createElement("p");
+	    messageElement.textContent = `${data.name}: ${data.content}`;
+	    chatHistory.appendChild(messageElement);
+
 	}
-        else if (data.message == "play") {
-	    gameId = data.game;
-            document.getElementById('before').style.display = 'none';
-	    document.getElementById('chessboard').style.display = 'grid';
-	    document.getElementById("container").style.display = "block";
-        }
-        else if (data.message == "invite")
-        {
-            room = data.room;
-            from_id = data.from_id;
-            showPopup();
-        }
 	else if (data.message == "connected")
 	{
 	    updateOnline(data);
 	}
 	else if (data.message == "disconnected")
 	{
-
 	    removeUser(data);
 	}
-
 
     }
 });
@@ -72,7 +71,7 @@ function accept() {
     hidePopup();
     userColor = "white";
     turn = false;
-    socket.emit("message", {from_id: from_id,  to_id: userId, message: "accept", 'room': room });
+    socket.emit("accept", {from_id: from_id,  to_id: userId, message: "accept", 'room': room });
 }
 
 function showPopup() {
@@ -102,3 +101,19 @@ function removeUser(data) {
         el.removeChild(rem);
     }
 }
+
+socket.on("invite", (data) => {
+    room = data.room;
+    from_id = data.from_id;
+    if (from_id != userId) {showPopup();}
+});
+
+socket.on("play", (data) => {
+    gameId = data.game;
+    document.getElementById('before').style.display = 'none';
+    document.getElementById('chessboard').style.display = 'grid';
+    document.getElementById("container").style.display = "block";
+    document.getElementById("name").innerHTML = data.name;
+});
+
+

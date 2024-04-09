@@ -58,8 +58,6 @@ def manage_games():
 
 @socketio.on("connect")
 def connect(auth):
-    if not rooms:
-        return
     room = session.get("main")
     name = session.get("name")
     player_id = session.get("player_id")
@@ -67,7 +65,7 @@ def connect(auth):
         join_room(room)
         rooms[room]['members'] += 1
         send({"name":name, "message": 'connected', 'player_id':player_id}, to=room)
-        print("joined ************** ", name)
+        print("joined ******************************** ", name, room)
     else:
         print(" not joined **************")
 
@@ -75,64 +73,27 @@ def connect(auth):
 def disconnect():
     name = session.get("name")
     player_id = session.get("player_id")
-    for key in rooms.keys():
-        leave_room(key)
-        send({"name":name, "message": 'diconnected', 'player_id':player_id}, to=key)
-        
-    print("leaved **************", name)
+    user = storage.get(User, player_id)
+
+    if user and user in online_users:
+        online_users.remove(user)
+
+    room = session.get("main")
+    if room:
+        leave_room(room)
+    print("leaved **************", name, room)
 
 
 @socketio.on('message')
 def handle_message(data):
-    print(data)
-    if data["message"] == "board":
-        room = session.get("gameId")
-        player_id = session.get("player_id")
-        send({'message':"board", 'start':data['start'], 'end':data['end'], 'game':data['game'], 'player_id':player_id}, to=room)
-        return 
-    elif data["message"] == "accept":
-        print("recieved accept **", data)
-        player2 = storage.get(User, data["to_id"])
-        game = storage.get(Game, data['room'])
-        print("************", data['room'])
-        if player2 and game:
-            print("recieved accept **", data)
-            room = data['room']
-            session["gameId"]  = game.id
-            join_room(room)
-            player2.color = "black"
-            game.black = player2
-            send({'message':"play", 'game':game.id}, to=room)
-        return
-    elif data["message"] == "chat":
-        room = session.get("gameId")
-        player2 = storage.get(User, data["from_id"])
-        if room:
-            send({'message':"chat", "name":player2.username, 'content':data['content']}, to=room)
-        print(room, "#########################")
-        return
-    elif data["message"] == "invite":
-        game = Game()
-        session["gameId"]  = game.id
-        player1 = storage.get(User, data["from_id"])
-        player1.color="white"
-        game.white = player1
-        rooms[game.id] = {"members":0, "messages":[]}
-        game.first_move = {str(1 * 8 + i):False for i in range(8)}
-        for i in range(48, 56):
-            game.first_move[str(i)] = False
-        join_room(game.id)
-        room = "main"
-        player_id = session.get("player_id")
-        name = session.get("name")
-        storage.new(game)
-        #storage.save()
-        send({'room':game.id, "message": data['message'], 'player_id':player_id, 'from_id':data['from_id']}, to=room)        
-        return        
-    room = session.get("main")
     player_id = session.get("player_id")
     name = session.get("name")
-    print('Received message:*************', data)
+
+    if data["message"] == "board":
+        room = session.get("gameId")
+        send({'message':"board", 'start':data['start'], 'end':data['end'], 'game':data['game'], 'player_id':player_id}, to=room)
+        return 
+    room = session.get("main")
     send({"name":name, "message": data['message'], 'player_id':player_id, 'from_id':data['from_id']}, to=room)
 
 
@@ -158,7 +119,52 @@ def auth():
     return render_template('login.html', message="incorrect password or username!")
 
 
-    
+
+@socketio.on('invite')
+def handle_invite(data):
+    player_id = session.get("player_id")
+    name = session.get("name")
+    if data["message"] == "invite":
+        game = Game()
+        session["gameId"]  = game.id
+        player1 = storage.get(User, data["from_id"])
+        player1.color="white"
+        game.white = player1
+        rooms[game.id] = {"members":0, "messages":[]}
+        game.first_move = {str(1 * 8 + i):False for i in range(8)}
+        for i in range(48, 56):
+            game.first_move[str(i)] = False
+        join_room(game.id)
+        room = "main"
+        name = session.get("name")
+        storage.new(game)
+        socketio.emit("invite", {'room':game.id, "message": data['message'], 'player_id':player_id, 'from_id':data['from_id']}, to=room)
+    else:
+        print("invalid invatation")
+
+@socketio.on('accept')
+def accept(data):
+    print(data)
+    game = storage.get(Game, data['room'])
+    player2 = storage.get(User, data["to_id"])
+    if player2 and game:
+        room = data['room']
+        session["gameId"]  = game.id
+        join_room(room)
+        player2.color = "black"
+        game.black = player2
+        socketio.emit("play", {'message':"play", 'game':game.id, "name": session.get("name")}, to=room)
+
+@socketio.on('chat')
+def accept(data):
+    room = session.get("gameId")
+    if room:
+        player2 = storage.get(User, data["from_id"])
+        join_room(room)
+        send({'message':"chat", "name":player2.username, 'content':data['content']}, to=room)
+    return
+
+
 
 if __name__ == '__main__':
      socketio.run(app, debug=True)

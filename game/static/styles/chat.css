@@ -1,0 +1,133 @@
+.container {
+  display: none;
+  width: 50%;
+  position: absolute;
+  top: 20%;
+  right: -10vw;
+  padding:-0px;
+  margin-right:0px;
+}
+
+.chatbox {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 50%;
+  height: 75vh;
+  background-color: #ffe;
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 0px 249px -48px rgba(0,0,0,0.75);
+  transition: all 300ms ease-in-out;
+}
+
+.bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background-color: #4286f4;
+}
+
+.positioning-container-bar {
+  position: relative;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 95%;
+  height: 100%;
+}
+
+.status {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(0, -50%);
+  width: 7.5px;
+  height: 7.5px;
+  background-color: lightgreen;
+  border-radius: 50%;
+  animation: statuschange 20s infinite;
+  transition: all 300ms ease-in-out;
+}
+
+@keyframes statuschange {
+  0% {background-color: lightgreen;}
+  50% {background-color: red;}
+  100% {background-color: gray;}
+}
+
+.name {
+  color: #fff;
+  font-family: sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(0, -50%);
+  margin-left: 15px;
+  transition: all 300ms ease-in-out;
+}
+
+.icon-container {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translate(0, -50%);
+}
+
+.icon {
+  margin-left: 10px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.icon i {
+  color: #fff;
+  font-size: 16px;
+  transition: all 300ms ease-in-out;
+}
+
+.chat-history {
+  width: 100%;
+  height: auto; 
+  background: blue;
+  background-color: #fff;
+  overflow-y: scroll;
+  transition: all 300ms ease-in-out;
+  flex: 1;
+}
+
+.chat-input {
+  border-top: 1px solid #e0e0e0;
+  width: 100%;
+  height: 7.5%;
+  background-color: #fff;
+  text-align: center;
+  transition: all 300ms ease-in-out;
+}
+
+.positioning-container-chat {
+  position: relative;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 85%;
+  height: 100%;
+}
+
+.chat-input input {
+  width: 100%;
+  height: 25px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(0, -50%);
+  border: none;
+  outline: none;
+  color: #000;
+  font-size: 1
+}
