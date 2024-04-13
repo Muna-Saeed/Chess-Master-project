@@ -207,11 +207,10 @@ These API routes facilitate communication between the web client (frontend) and 
 ## Usage Instructions
 
 ### Starting a New Game
-1. Navigate to the "New Game" section of the application.
-2. Choose whether to play against the computer or invite a friend.
-3. If playing against the computer, select the desired difficulty level.
-4. If inviting a friend, enter their username or email address to send an invitation.
-5. Start the game and make your first move.
+Once the application is running, users can:
+
+1. Sign up or log in to their account.
+2. Start a new game against the computer or invite friends to play. and make your first move.
 
 ### Making Moves
 1. Click on the chess piece you want to move.
@@ -248,6 +247,8 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Installation Instructions
 
+To run the Chess Master project locally, follow these steps:
+
 1. Clone the Repository
 	 ```
 	git clone https://github.com/Muna-Saeed/Chess-Master-project.git
@@ -260,7 +261,7 @@ This project is licensed under the [MIT License](LICENSE).
 	 ```
 	flask db upgrade
 	 ```
-4. Start the Application
+4. Run the following command to start the Flask application
 	 ```
 	python3 -m game.app
 	 ```
