@@ -1,5 +1,30 @@
 # Chess Master
+
 ## Master the Chessboard: Play Against Friends or AI!
+
+# Table of Contents
+
+1. [Chess Master](#chess-master)
+2. [Run Instructions](#run-instructions)
+3. [Team Members](#team-members)
+4. [Technologies](#technologies)
+5. [Alternate Technology Choices](#alternate-technology-choices)
+6. [Challenge Statement](#challenge-statement)
+7. [Risks](#risks)
+8. [Infrastructure](#infrastructure)
+9. [Existing Solutions](#existing-solutions)
+10. [Chess Master MVP Specification](#chess-master-mvp-specification)
+    - [Architecture](#architecture)
+    - [Data Model](#data-model)
+    - [User Stories for Chess Master MVP](#user-stories-for-chess-master-mvp)
+11. [APIs](#apis)
+12. [Mockups](#mockups)
+13. [Usage Instructions](#usage-instructions)
+14. [Contributing Guidelines](#contributing-guidelines)
+15. [Related Projects](#related-projects)
+16. [Licensing](#licensing)
+17. [Installation Instructions](#installation-instructions)
+18. [Screenshots/GIFs](#screenshotsgifs)
 
 ---
 
