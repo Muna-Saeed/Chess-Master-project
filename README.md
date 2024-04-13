@@ -1,10 +1,18 @@
 # Chess Master
 ![AI Is a Master of Games, but How Does It Compare to the Human Mind](ChessAi.webp)
+
 ## Master the Chessboard: Play Against Friends or AI!
+Welcome to Chess Master, a web application designed to bring the classic game of chess to life in the digital realm. Challenge your friends or test your skills against an AI opponent in this immersive gaming experience.
+
+---
+
+![Chess Master Demo](chess.gif)
+
+Welcome to Chess Master, a web application designed to bring the classic game of chess to life in the digital realm. Challenge your friends or test your skills against an AI opponent in this immersive gaming experience.
 
 # Table of Contents
 
-1. [Chess Master](#chess-master)
+1. [Introduction](#introduction)
 2. [Run Instructions](#run-instructions)
 3. [Team Members](#team-members)
 4. [Technologies](#technologies)
@@ -25,6 +33,25 @@
 16. [Licensing](#licensing)
 17. [Installation Instructions](#installation-instructions)
 18. [Screenshots/GIFs](#screenshotsgifs)
+
+---
+
+# Introduction
+## Master the Chessboard: Play Against Friends or AI!
+
+![Chess Master Demo](demo.gif)
+
+Welcome to Chess Master, a web application designed to bring the classic game of chess to life in the digital realm. Challenge your friends or test your skills against an AI opponent in this immersive gaming experience.
+
+### Deployed Site:
+[Chess Master Deployed Site](abdiwoli.tech)
+
+### Final Project Blog Article:
+[Read our Project Journey](https://www.linkedin.com/pulse/chess-master-where-passion-meets-code-unforgettable-abdiwoli-hassen-ycbof/ |https://www.linkedin.com/pulse/chess-master-journey-strategy-innovation-muna-saeed-oeh4e/)
+
+### Authors:
+- [Abdiwoli Abdi](https://www.linkedin.com/in/abdiwoli)
+- [Muna Said](https://www.linkedin.com/in/muna-saeedm)
 
 ---
 
