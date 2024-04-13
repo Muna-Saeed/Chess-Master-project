@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Play Chess Game</title>
     <link href="/static/styles/chessboard.css" rel="stylesheet"></link>
+    <link href="/static/styles/popup.css" rel="stylesheet"></link>
     <style>
       .container {
           height: 100%;
@@ -20,7 +21,7 @@
           height: 80vh;
           background-color: #f0f0f0;
           border: 1px solid #ccc;
-          overflow-y: auto; /* Enable vertical scrollbar */
+          overflow-y: auto; 
           display: flex;
           flex-direction: column;
           justify-content: space-between;
@@ -56,9 +57,19 @@
                 <li><a href="/settings">Settings</a></li>
             </ul>
         </nav>
-    </header>
+   </header>
+   <div id="replace" style="display: none;">
+      <p>Select one to replace pawn:</p>
+      <button>♕</button>
+      <button>♖</button>
+      <button>♗</button>
+      <button>♘</button>
+    </div>
   <audio id="valid-sound" src="{{ url_for('static', filename='sounds/valid_sound.wav') }}"></audio>
   <audio id="invalid-sound" src="{{ url_for('static', filename='sounds/invalid_sound.wav') }}"></audio>
+  <div>
+    <p> hi {{user.username}} You are the black color</p>
+  </div>
 
   <main>   
     <h2>{{user.name}}<h2>

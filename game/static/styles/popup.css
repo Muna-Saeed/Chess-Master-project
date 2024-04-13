@@ -14,3 +14,30 @@
 .popup-buttons {
     text-align: center;
 }
+
+
+#replace {
+  position: fixed; /* Ensures it stays fixed on scroll */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centers the element horizontally and vertically */
+  background-color: white;
+  padding: 15px; /* Adjust padding as needed */
+  border: 1px solid #ddd;
+  border-radius: 5px; /* Adds rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow */
+  text-align: center; /* Centers text content within the popup */
+}
+
+#replace button {
+  margin: 5px; /* Adds spacing between buttons */
+  padding: 5px 10px; /* Adjust button padding as needed */
+  border: none;
+  border-radius: 3px; /* Adds rounded corners to buttons */
+  font-size: 16px;
+  cursor: pointer; /* Indicates clickable element */
+}
+
+#replace button:hover { /* Style change on hover */
+  background-color: #eee;
+}

@@ -21,6 +21,10 @@ function createMessage(name, message) {
 function sendMessage(player_id) {
     userColor = "black";
     turn = true;
+    document.getElementById('turn').innerHTML = "your turn";
+    tag = document.getElementById('color');
+    tag.innerHTML = "Your Color: black";
+
     socket.emit("invite", {from_name:username, from_id:userId,  message: "invite" });
 }
 
@@ -28,6 +32,7 @@ socket.on("message", function(data) {
     if (data.player_id != userId) {
 	if (data.message == "board") {
 	    turn = true;
+	    document.getElementById('turn').innerHTML = "your turn";
 	    const board = getChessboardSquares();
 	    start_square = board[data.start[0] * 8 + data.start[1]];
 	    end_square = board[data.end[0] * 8 + data.end[1]];
@@ -53,7 +58,6 @@ socket.on("message", function(data) {
 	    const messageElement = document.createElement("p");
 	    messageElement.textContent = `${data.name}: ${data.content}`;
 	    chatHistory.appendChild(messageElement);
-
 	}
 	else if (data.message == "connected")
 	{
@@ -70,6 +74,7 @@ socket.on("message", function(data) {
 function accept() {
     hidePopup();
     userColor = "white";
+    document.getElementById('color').innerHTML = "color: white";
     turn = false;
     socket.emit("accept", {from_id: from_id,  to_id: userId, message: "accept", 'room': room });
 }
@@ -105,15 +110,15 @@ function removeUser(data) {
 socket.on("invite", (data) => {
     room = data.room;
     from_id = data.from_id;
+    if (data.name != username){document.getElementById('name').innerHTML = data.name; }
     if (from_id != userId) {showPopup();}
 });
 
+
 socket.on("play", (data) => {
     gameId = data.game;
+    if (data.name != username){document.getElementById('name').innerHTML = data.name; }
     document.getElementById('before').style.display = 'none';
     document.getElementById('chessboard').style.display = 'grid';
     document.getElementById("container").style.display = "block";
-    document.getElementById("name").innerHTML = data.name;
 });
-
-

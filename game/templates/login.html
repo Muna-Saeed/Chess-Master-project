@@ -4,9 +4,33 @@
      <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chess Master</title>
-  <link rel="stylesheet" href="/static/styles/signup.css"/>
+    <link rel="stylesheet" href="/static/styles/signup.css"/>
+    <link rel="stylesheet" href="/static/styles/styles.css"/>
 </head>
-<body>
+  <body>
+     <header>
+        <h1>Chess Master</h1>
+        <nav>
+            <ul>
+              <li><a href="/">Home</a></li>
+                {% if user %}
+                    <li><a href="/play/{{ user.id }}">Play</a></li>
+                {% else %}
+                    <li><a href="/play">Play</a></li>
+                {% endif %}
+                <li><a href="/create">Login</a></li>
+                <li>
+                    {% if user %}
+                        <a href="/user/{{ user.id }}">User Profile</a>
+                    {% else %}
+                        <a href="/user">User Profile</a>
+                    {% endif %}
+                </li>
+                <li><a href="/history">Game History</a></li>
+                <li><a href="/settings">Settings</a></li>
+            </ul>
+        </nav>
+    </header>
     <div class="container-wrapper">
         <div class="auth-screen">
             <div class="auth-screen__content">

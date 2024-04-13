@@ -2,7 +2,6 @@ function handleSquareClick(square) {
     console.log("handleSquareClick function called");
     updateBoard();
     if (selectedSquare) {
-	document.getElementById('turn').innerHTML = "";
         removePossibleClass();
         const piece = selectedSquare.querySelector('.piece');
 	const endPiece = square.querySelector('.piece');

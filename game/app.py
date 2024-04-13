@@ -27,37 +27,34 @@ def index():
     user_id = session.get('user_id')
     return render_template('index.html')
 
+@app.route('/sitemap')
+def sitemap():
+    """ this route for sitemap which is for google search requirement"""
+    return render_template('sitemap.xml')
+
 @app.route('/play')
 def play():
+    """ this route handles play request when the user not loged in """
     return render_template('login.html')
 
-@app.route('/user')
-def user_profile():
-    return render_template('user_profile.html')
 
 @app.route('/settings')
 def settings():
+    """ this route will handle game settings """
     return render_template('settings.html')
 
 @app.route('/history')
 def game_history():
     return render_template('game_history.html')
 
-@app.route('/api/players')
-def get_players():
-    return jsonify(players)
-
-@app.route('/api/games', methods=['GET', 'POST'])
-def manage_games():
-    if request.method == 'GET':
-        return jsonify(games)
-    elif request.method == 'POST':
-        data = request.get_json()
-        return jsonify({"message": "New game created"})
-
 
 @socketio.on("connect")
 def connect(auth):
+    """ 
+    socket connet:
+    when user is online this function add the user to room
+    and sends message to teh front end to detec that new user is online
+    """
     room = session.get("main")
     name = session.get("name")
     player_id = session.get("player_id")
@@ -71,6 +68,7 @@ def connect(auth):
 
 @socketio.on("disconnect")
 def disconnect():
+    """ this function handles the user offline """
     name = session.get("name")
     player_id = session.get("player_id")
     user = storage.get(User, player_id)
@@ -86,6 +84,9 @@ def disconnect():
 
 @socketio.on('message')
 def handle_message(data):
+    """ this function handles to detect some
+        messages from socket emit 
+    """
     player_id = session.get("player_id")
     name = session.get("name")
 
@@ -99,6 +100,10 @@ def handle_message(data):
 
 @app.route('/auth', methods=["POST", "GET"])
 def auth():
+    """ 
+    * this function is handles user login 
+    * it checks if the passwornd matchs the username or email
+    """
     if request.method == "POST":
         session.clear()
         username = request.form.get("username");
@@ -122,9 +127,12 @@ def auth():
 
 @socketio.on('invite')
 def handle_invite(data):
+    """ this function handles the game invitation request """
     player_id = session.get("player_id")
     name = session.get("name")
+    #check if data['messge'] is invite to handle
     if data["message"] == "invite":
+        # create new game object
         game = Game()
         session["gameId"]  = game.id
         player1 = storage.get(User, data["from_id"])
@@ -134,29 +142,33 @@ def handle_invite(data):
         game.first_move = {str(1 * 8 + i):False for i in range(8)}
         for i in range(48, 56):
             game.first_move[str(i)] = False
+        #both to players should join new room private room
         join_room(game.id)
         room = "main"
         name = session.get("name")
         storage.new(game)
-        socketio.emit("invite", {'room':game.id, "message": data['message'], 'player_id':player_id, 'from_id':data['from_id']}, to=room)
+        socketio.emit("invite", {'room':game.id, 'name':name, "message": data['message'], 'player_id':player_id, 'from_id':data['from_id']}, to=room)
     else:
         print("invalid invatation")
 
 @socketio.on('accept')
 def accept(data):
-    print(data)
-    game = storage.get(Game, data['room'])
+    """ This function handles when the suer accept the invitation """
+    # since the game already created the player 2 gets the game object using game Id
+    game = storage.get(Game, data['room']) #room is the room name and game Id
     player2 = storage.get(User, data["to_id"])
     if player2 and game:
         room = data['room']
         session["gameId"]  = game.id
+        #player2 joins the private room
         join_room(room)
         player2.color = "black"
         game.black = player2
         socketio.emit("play", {'message':"play", 'game':game.id, "name": session.get("name")}, to=room)
 
 @socketio.on('chat')
-def accept(data):
+def chats(data):
+    """ this function handles chat room for the 2 players """
     room = session.get("gameId")
     if room:
         player2 = storage.get(User, data["from_id"])

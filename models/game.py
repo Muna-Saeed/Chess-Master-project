@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" holds class User"""
+""" holds class Game"""
 
 import models
 from models.base_model import BaseModel, Base
@@ -11,10 +11,10 @@ from hashlib import md5
 
 
 class Game(BaseModel, Base):
-    """Representation of a user """
+    """Representation of a Game"""
 
     def __init__(self, *args, **kwargs):
-        """initializes user"""
+        """initializes Game"""
         super().__init__(*args, **kwargs)
 
     def __setattr__(self, name, value):

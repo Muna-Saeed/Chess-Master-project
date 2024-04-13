@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+""" import modules """
 from flask import Blueprint, redirect, request, jsonify, render_template, session
 from models import storage
 from models.user import User
@@ -12,23 +13,26 @@ routes = Blueprint('other_routes', __name__)
 emails = storage.get_user_email();
 
 
-@routes.errorhandler(405)
-def method_not_allowed(e):
-    return redirect('/')
-
-
 @routes.route('/create')
 def sigup():
+    """ create new user page """
     return render_template('signup.html')
+
+@routes.route('/settings')
+def settings():
+    """ get settings page """
+    return "this page is not ready yet"
 
 
 @routes.route('/login')
 def login():
+    """ get login page """
     return render_template('login.html')
 
 
 @routes.route('/check_new_user', methods=["POST"])
 def check_new_user():
+    """ before register check if user already registered """
     username = request.form.get("username");
     first_name = request.form.get("first_name");
     last_name = request.form.get("last_name");
@@ -40,8 +44,7 @@ def check_new_user():
         return render_template('signup.html', username="invalid username!")
     if not is_valid_email(email):
         return render_template('signup.html', email="invalid email!")
-
-    
+    # user not exist now create new user
     user = User()
     user.first_name, user.last_name = first_name, last_name
     user.username, user.email, user.pasw = username, email, pasw
@@ -55,6 +58,7 @@ def check_new_user():
 
 @routes.route('/play/<id>')
 def play(id):
+    """ get game page """
     user = storage.get(User, id)
     print(user)
     if user:
@@ -70,6 +74,7 @@ def play(id):
 @routes.route('/user', defaults={'user_id': None})
 @routes.route('/user/<user_id>')
 def profile(user_id):
+    """ game profile page if user loged in """
     if user_id:
         user = storage.get(User, user_id)
         return render_template('user_profile.html', user=user)
@@ -77,16 +82,19 @@ def profile(user_id):
 
 
 def is_valid_email(email):
+    """ check if the email is valid format """
     regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(regex, email) is not None
 
 
 def is_valid_username(username):
+    """ check if username is valid """
     regex = r'^[a-zA-Z][a-zA-Z0-9]{2,19}$'
     return re.match(regex, username) is not None
 
 
 def is_valid_password(password):
+    """  check password is valif password format """
     regex = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$'
     return re.match(regex, password) is not None
 
@@ -100,6 +108,7 @@ def get_online():
 
 @routes.route('/logout/<user_id>')
 def logout(user_id):
+    """ handle logout """
     for i in online_users:
         if i.id == user_id:
             online_user.remove(i)
@@ -110,6 +119,7 @@ def logout(user_id):
 
 @routes.route('/upload', methods=['POST'])
 def upload():
+    """ upload profile phote """
     user_id = session.get("player_id")
     user = storage.get(User, user_id)
     if not user:
@@ -121,21 +131,17 @@ def upload():
 
     if file.filename == '':
         return jsonify({'error': 'No selected file'})
-    
     filename, file_extension = os.path.splitext(file.filename)
     filename = '/static/images/profile/' + user_id + file_extension
     user.img = filename
     storage.save()
 
     absolute_filename = '/home/ubuntu/Chess-Master-project/game' + filename
-
+    # resize the image
     img = Image.open(file)
-
     new_width = 150
     new_height = 150
-
     resized_img = img.resize((new_width, new_height))
-
     resized_img.save(absolute_filename)
 
     return jsonify({'message': 'File uploaded successfully'})
