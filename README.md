@@ -2,13 +2,9 @@
 ![AI Is a Master of Games, but How Does It Compare to the Human Mind](ChessAi.webp)
 
 ## Master the Chessboard: Play Against Friends or AI!
-Welcome to Chess Master, a web application designed to bring the classic game of chess to life in the digital realm. Challenge your friends or test your skills against an AI opponent in this immersive gaming experience.
-
 ---
 
 ![Chess Master Demo](chess.gif)
-
-Welcome to Chess Master, a web application designed to bring the classic game of chess to life in the digital realm. Challenge your friends or test your skills against an AI opponent in this immersive gaming experience.
 
 # Table of Contents
 
@@ -37,10 +33,6 @@ Welcome to Chess Master, a web application designed to bring the classic game of
 ---
 
 # Introduction
-## Master the Chessboard: Play Against Friends or AI!
-
-![Chess Master Demo](demo.gif)
-
 Welcome to Chess Master, a web application designed to bring the classic game of chess to life in the digital realm. Challenge your friends or test your skills against an AI opponent in this immersive gaming experience.
 
 ### Deployed Site:
