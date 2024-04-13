@@ -1,5 +1,5 @@
 # Chess Master
-
+![AI Is a Master of Games, but How Does It Compare to the Human Mind](ChessAi.webp)
 ## Master the Chessboard: Play Against Friends or AI!
 
 # Table of Contents
