@@ -39,8 +39,8 @@ Welcome to Chess Master, a web application designed to bring the classic game of
 [Chess Master Deployed Site](abdiwoli.tech)
 
 ### Final Project Blog Articles:
-[Read Abdiwoli's Project Journey](https://www.linkedin.com/pulse/chess-master-where-passion-meets-code-unforgettable-abdiwoli-hassen-ycbof/)
-[Read Muna's Project Journey](https://www.linkedin.com/pulse/chess-master-journey-strategy-innovation-muna-saeed-oeh4e/)
+**[Read Abdiwoli's Project Journey](https://www.linkedin.com/pulse/chess-master-where-passion-meets-code-unforgettable-abdiwoli-hassen-ycbof/)**
+**[Read Muna's Project Journey](https://www.linkedin.com/pulse/chess-master-journey-strategy-innovation-muna-saeed-oeh4e/)**
 
 ### Authors:
 Connect with us on LinkedIn to stay updated on our latest projects and collaborations.
