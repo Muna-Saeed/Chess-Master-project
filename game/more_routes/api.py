@@ -217,3 +217,9 @@ def update_board():
         return "not game"
 
     return 'Board updated successfully', 200
+
+
+
+@api_route.route('/osman', methods=['GET'])
+def redirect_to_custom_page():
+    return render_template("osman.html")
