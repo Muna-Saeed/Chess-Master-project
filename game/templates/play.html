@@ -59,9 +59,17 @@
         </div>
     </header>
 
+    <div id="replace" style="display: none;">
+      <p>Select one to replace pawn:</p>
+      <button>♕</button>
+      <button>♖</button>
+      <button>♗</button>
+      <button>♘</button>
+    </div>    
+
     <main class="container my-5">
         <div>
-            <h3 class="text-center">
+            <h3 class="text-center" id="title">&nbsp;&nbsp;
                 {% if user %}
                 <b> Hi {{ user.username }} </b>
                 {% endif %}
@@ -73,27 +81,46 @@
         <audio id="valid-sound" src="{{ url_for('static', filename='sounds/valid_sound.wav') }}"></audio>
         <audio id="invalid-sound" src="{{ url_for('static', filename='sounds/invalid_sound.wav') }}"></audio>
         <div class="chessboard" id="chessboard"></div>
-    </main>
-
+        
+        <script>
+          function playValidSound() {
+              var audio = document.getElementById('valid-sound');
+              audio.play();
+          }
+          function playInValidSound() {
+              var audio = document.getElementById('invalid-sound');
+              audio.play();
+          }
+	</script>
     <div class="chat_container">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">Chat</div>
                     <div class="card-body">
-                        <div class="chat-history" id="chat-history"></div>
-                        <div class="chat-input mt-3">
-                            <input type="text" id="chat-text" class="form-control" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        
+    <div class="chatbox", id="chatbox">
+      <div class="bar">
+        <div class="positioning-container-bar" id = "bar">
+          <div class="status"></div>
+          <div class="name", id="name">'</div>
         </div>
+    </div>                    
+                   
+    <div class="chat-history" id="chat-history"></div>
+    <div class="chat-input mt-3">
+      <input type="text" id="chat-text" class="form-control" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
+      </div>
+     </div>
+        </div>
+          </div>
+      </div>
     </div>
+         </div>
 
     <div class="container my-5">
         <div id="before">
-            <h4>Play chess online against friends or the computer!</h4>
+            <h4>&nbsp;&nbsp;&nbsp;Play chess online against friends or the computer!</h4>
             {% if user %}
             <button class="btn btn-primary" onclick="window.location.href='/play/{{ user.id }}'">Play with Computer</button>
             {% else %}
@@ -104,7 +131,7 @@
                 {% if players %}
                 {% for player in players %}
                 {% if player.username != user.username %}
-                <li>{{ player.username }} <button id="{{ player.username }}" class="btn btn-primary" onclick="sendMessage('{{ player.id }}')">Invite {{ user.username }} To Play</button></li>
+                <li> {{ player.username }}&nbsp; <button id="{{ player.username }}" class="btn btn-primary" onclick="sendMessage('{{ player.id }}')">Invite {{ user.username }} To Play</button></li>
                 {% endif %}
                 {% endfor %}
                 {% endif %}
@@ -119,6 +146,7 @@
             </div>
         </div>
     </div>
+    </main>
 
     <footer class="bg-dark text-light py-3">
         <div class="container text-center">
