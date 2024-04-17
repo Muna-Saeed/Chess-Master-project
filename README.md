@@ -315,8 +315,4 @@ To run the Chess Master project locally, follow these steps:
 ## Screenshots/GIFs
 ![chessboard](chessboard.JPG)
 
-```
-
-
-
 This README.md provides comprehensive information about the project, including team members, chosen technologies, challenge statement, risks, infrastructure details, and comparisons with existing solutions. It also outlines the MVP specification for Chess Master, including its architecture, data model, Mockups, user stories, API routes, usage instructions, contributing guidelines, related projects, licensing, installation instructions, and visual elements to showcase the user interface and gameplay. It provides a clear overview of the project's scope and functionality for both developers and stakeholders.It provides a clear overview of the project's scope and functionality for both developers and stakeholders. It serves as a guide for both team members and potential users or contributors.
