@@ -114,13 +114,14 @@ def auth():
             session['name'] = obj.username
             session['player_id'] = obj.id
             session['main'] = "main"
+            print("sending to play.html")
             return render_template('play.html', user=obj, players=online_users)
     elif session.get("player_id"):
         obj = storage.get(User, session.get("player_id"))
         if obj:
             if obj not in online_users: online_users.append(obj)
             session['main'] = "main"
-            return render_template('play.html', user=obj, players=online_users)
+            return render_template('plays.html', user=obj, players=online_users)
     return render_template('login.html', message="incorrect password or username!")
 
 
